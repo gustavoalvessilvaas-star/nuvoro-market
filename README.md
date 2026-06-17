@@ -22,6 +22,12 @@ Nuvoro Market is a production-shaped Next.js MVP for a United States dropshippin
 6. Start the app with `npm run dev`.
 7. Open `http://localhost:3000`.
 
+If you want to use the portable Node runtime downloaded by Codex in this workspace, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\run-local.ps1
+```
+
 ## Required Environment Variables
 
 See `.env.example` for the full list:
