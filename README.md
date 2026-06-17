@@ -48,6 +48,7 @@ See `.env.example` for the full list:
 ## Manual Launch Checklist
 
 - Read `docs/access-and-integrations.md` for the exact app/tool access observed in this Codex environment.
+- Read `docs/github-publish.md` to push the local commit to the GitHub repository once it is connected.
 - Create a Supabase project, run schema and seed SQL, create an admin auth user, then insert that auth user ID into `admin_users`.
 - Create Stripe products or use dynamic Checkout line items as implemented, configure webhook `/api/webhooks/stripe`, and test with Stripe CLI.
 - Verify product suppliers, shipping times, returns, product compliance and placeholder images.
