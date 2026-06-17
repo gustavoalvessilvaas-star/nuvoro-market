@@ -6,6 +6,7 @@ import { CheckCircle2, ShieldCheck, Truck } from "lucide-react";
 import { AddToCartActions } from "@/components/store/add-to-cart";
 import { ProductViewTracker } from "@/components/store/product-view-tracker";
 import { ProductCard } from "@/components/product-card";
+import { TrustBadges } from "@/components/store/trust-badges";
 import { getActiveProducts, getProductBySlug, getStoreProductBySlug, getStoreProducts } from "@/lib/products";
 import { formatCurrency } from "@/lib/utils";
 
@@ -29,34 +30,38 @@ export default async function ProductPage({ params }: { params: { slug: string }
       <ProductViewTracker productId={product.id} value={product.price} />
       <section className="container-page grid gap-10 py-10 lg:grid-cols-[1fr_.9fr]">
         <div className="grid gap-4">
-          <Image src={product.images[0]} alt={`${product.name} placeholder`} width={900} height={700} className="aspect-[4/3] rounded-lg border border-line bg-mint object-cover" priority />
+          <Image src={product.images[0]} alt={`${product.name} placeholder`} width={900} height={700} className="aspect-[4/3] rounded-[2rem] border border-line bg-mint object-cover shadow-soft" priority />
           <div className="grid grid-cols-4 gap-3">
-            {product.images.map((image) => <Image key={image} src={image} alt={`${product.name} gallery placeholder`} width={220} height={160} className="aspect-[4/3] rounded-md border border-line object-cover" />)}
+            {product.images.map((image) => <Image key={image} src={image} alt={`${product.name} gallery placeholder`} width={220} height={160} className="aspect-[4/3] rounded-2xl border border-line bg-white object-cover" />)}
           </div>
         </div>
-        <div>
-          <p className="text-sm font-bold uppercase tracking-wide text-moss">{product.category}</p>
-          <h1 className="mt-3 text-4xl font-black leading-tight">{product.headline}</h1>
-          <p className="mt-4 text-lg text-ink/70">{product.subheadline}</p>
+        <div className="card-surface h-fit p-6 lg:p-8">
+          <p className="eyebrow">{product.category}</p>
+          <h1 className="mt-3 text-balance text-4xl font-black leading-tight text-ink">{product.headline}</h1>
+          <p className="mt-4 text-lg leading-8 text-ink/70">{product.subheadline}</p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <span className="text-4xl font-black">{formatCurrency(product.price)}</span>
             {product.compare_at_price ? <span className="text-lg text-ink/45 line-through">{formatCurrency(product.compare_at_price)}</span> : null}
-            {discount ? <span className="rounded-md bg-mint px-3 py-2 text-sm font-bold text-moss">Save {discount}%</span> : null}
+            {discount ? <span className="rounded-full bg-mint px-3 py-2 text-sm font-bold text-moss">Save {discount}%</span> : null}
           </div>
           <div className="mt-6"><AddToCartActions product={product} /></div>
           <div className="mt-6 grid gap-3">
             {product.benefits.map((benefit) => (
-              <p key={benefit} className="flex gap-2 text-sm"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-moss" /> {benefit}</p>
+              <p key={benefit} className="flex gap-2 text-sm font-medium text-ink/70"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-moss" /> {benefit}</p>
             ))}
           </div>
-          <div className="mt-6 grid gap-3 rounded-lg border border-line bg-white p-5">
+          <div className="mt-6 grid gap-3 rounded-2xl border border-line bg-cloud p-5">
             <p className="flex gap-2 text-sm"><Truck className="h-4 w-4 text-moss" /> {product.shipping_estimate}</p>
             <p className="flex gap-2 text-sm"><ShieldCheck className="h-4 w-4 text-moss" /> 30-day support window after delivery.</p>
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-12">
+      <section className="container-page pb-8">
+        <TrustBadges compact />
+      </section>
+
+      <section className="soft-section py-12">
         <div className="container-page grid gap-8 md:grid-cols-3">
           <div><h2 className="text-2xl font-black">Problem</h2><p className="mt-3 text-ink/70">Small everyday frustrations can slow down routines and create clutter.</p></div>
           <div><h2 className="text-2xl font-black">Solution</h2><p className="mt-3 text-ink/70">{product.name} gives you a practical tool designed around a clear use case.</p></div>
@@ -65,7 +70,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
       </section>
 
       <section className="container-page grid gap-8 py-12 lg:grid-cols-2">
-        <div className="rounded-lg border border-line bg-white p-6">
+        <div className="card-surface p-6">
           <h2 className="text-2xl font-black">Product Details</h2>
           <dl className="mt-4 grid gap-3">
             {Object.entries(product.details).map(([key, value]) => (
@@ -73,7 +78,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
             ))}
           </dl>
         </div>
-        <div className="rounded-lg border border-line bg-white p-6">
+        <div className="card-surface p-6">
           <h2 className="text-2xl font-black">Reviews</h2>
           <p className="mt-3 text-ink/70">Customer review collection is prepared for launch. Add verified reviews after real orders are fulfilled.</p>
         </div>
@@ -82,7 +87,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
       <section className="container-page py-12">
         <h2 className="text-2xl font-black">FAQ</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {product.faqs.map((faq) => <div key={faq.question} className="rounded-lg border border-line bg-white p-5"><h3 className="font-bold">{faq.question}</h3><p className="mt-2 text-sm text-ink/70">{faq.answer}</p></div>)}
+          {product.faqs.map((faq) => <div key={faq.question} className="card-surface p-5"><h3 className="font-bold">{faq.question}</h3><p className="mt-2 text-sm text-ink/70">{faq.answer}</p></div>)}
         </div>
       </section>
 
@@ -93,7 +98,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         </section>
       ) : null}
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white p-3 md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 p-3 backdrop-blur md:hidden">
         <Link href="/checkout" className="btn-primary w-full">Buy Now - {formatCurrency(product.price)}</Link>
       </div>
     </>

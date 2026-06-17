@@ -7,12 +7,14 @@
 }
 
 body {
-  background: #f7f8f6;
+  background:
+    radial-gradient(circle at top left, rgba(232, 244, 239, 0.9), transparent 34rem),
+    linear-gradient(180deg, #fbfcfa 0%, #f4f7f4 45%, #f7f8f6 100%);
   color: #17211f;
 }
 
 a, button {
-  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 .container-page {
@@ -20,17 +22,41 @@ a, button {
 }
 
 .btn-primary {
-  @apply inline-flex min-h-11 items-center justify-center rounded-md bg-coral px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#c74f3b] disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex min-h-11 items-center justify-center rounded-full bg-coral px-5 py-3 text-sm font-bold text-white shadow-sm shadow-coral/20 hover:-translate-y-0.5 hover:bg-[#c74f3b] hover:shadow-lg hover:shadow-coral/20 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60;
 }
 
 .btn-secondary {
-  @apply inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-white px-5 py-3 text-sm font-semibold text-ink hover:border-moss hover:text-moss disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink shadow-sm hover:-translate-y-0.5 hover:border-moss hover:text-moss hover:shadow-md disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60;
 }
 
 .field {
-  @apply w-full rounded-md border border-line bg-white px-3 py-2 text-sm outline-none focus:border-moss focus:ring-2 focus:ring-mint;
+  @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint;
 }
 
 .label {
   @apply text-sm font-medium text-ink;
+}
+
+.card-surface {
+  @apply rounded-2xl border border-line/80 bg-white/90 shadow-sm shadow-ink/5 backdrop-blur;
+}
+
+.soft-section {
+  @apply border-y border-line/70 bg-white/70;
+}
+
+.eyebrow {
+  @apply text-xs font-black uppercase tracking-[0.18em] text-moss;
+}
+
+.auth-page {
+  @apply container-page grid min-h-[calc(100vh-8rem)] place-items-center py-12;
+}
+
+.nav-link {
+  @apply rounded-full px-3 py-2 text-sm font-bold text-ink/70 hover:bg-mint hover:text-moss;
+}
+
+.nav-link-active {
+  @apply bg-mint text-moss;
 }

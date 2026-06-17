@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CreditCard, LockKeyhole } from "lucide-react";
 import { useCart } from "@/components/store/cart-provider";
+import { TrustBadges } from "@/components/store/trust-badges";
 import { formatCurrency } from "@/lib/utils";
 import { getStoredUtms, trackEvent } from "@/lib/tracking-client";
 
@@ -43,7 +44,7 @@ export default function CheckoutPage() {
   if (!items.length) {
     return (
       <section className="container-page py-10">
-        <div className="rounded-lg border border-line bg-white p-10 text-center">
+        <div className="card-surface p-10 text-center">
           <h1 className="text-3xl font-black">Your cart is empty</h1>
           <Link href="/products" className="btn-primary mt-5">Shop Products</Link>
         </div>
@@ -53,8 +54,10 @@ export default function CheckoutPage() {
 
   return (
     <section className="container-page grid gap-8 py-10 lg:grid-cols-[1fr_420px]">
-      <form onSubmit={submit} className="rounded-lg border border-line bg-white p-5">
-        <h1 className="text-3xl font-black">Secure Checkout</h1>
+      <form onSubmit={submit} className="card-surface p-5 sm:p-7">
+        <p className="eyebrow">Protected payment flow</p>
+        <h1 className="mt-2 text-3xl font-black">Secure Checkout</h1>
+        <p className="mt-2 text-sm leading-6 text-ink/60">Enter your shipping details. Payments are handled by Stripe, and Nuvoro Market never stores card numbers.</p>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {[
             ["customer_name", "Full name"], ["customer_email", "Email"], ["customer_phone", "Phone"],
@@ -74,9 +77,9 @@ export default function CheckoutPage() {
         {error ? <p className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
         <button disabled={loading} className="btn-primary mt-6 w-full gap-2"><CreditCard className="h-4 w-4" /> {loading ? "Starting checkout..." : "Pay with Stripe"}</button>
         <button type="button" disabled className="btn-secondary mt-3 w-full">{paypalEnabled ? "PayPal setup pending" : "PayPal coming soon"}</button>
-        <p className="mt-4 flex gap-2 text-sm text-ink/60"><LockKeyhole className="h-4 w-4" /> Payments are processed by Stripe. Nuvoro Market does not store card numbers.</p>
+        <p className="mt-4 flex gap-2 text-sm text-ink/60"><LockKeyhole className="h-4 w-4 shrink-0" /> Payments are processed by Stripe. Nuvoro Market does not store card numbers.</p>
       </form>
-      <aside className="h-fit rounded-lg border border-line bg-white p-5">
+      <aside className="card-surface h-fit p-5">
         <h2 className="text-xl font-black">Order Summary</h2>
         <div className="mt-4 grid gap-4">
           {items.map((item) => (
@@ -91,6 +94,9 @@ export default function CheckoutPage() {
           <div className="flex justify-between"><span>Subtotal</span><span>{formatCurrency(subtotal)}</span></div>
           <div className="flex justify-between"><span>Shipping</span><span>Free</span></div>
           <div className="flex justify-between text-lg font-black"><span>Total</span><span>{formatCurrency(subtotal)}</span></div>
+        </div>
+        <div className="mt-5">
+          <TrustBadges compact />
         </div>
       </aside>
     </section>

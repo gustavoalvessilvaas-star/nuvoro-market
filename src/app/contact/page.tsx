@@ -20,8 +20,9 @@ export default function ContactPage() {
 
   return (
     <section className="container-page grid gap-8 py-10 lg:grid-cols-[1fr_380px]">
-      <form onSubmit={submit} className="rounded-lg border border-line bg-white p-5">
-        <h1 className="text-3xl font-black">Contact Support</h1>
+      <form onSubmit={submit} className="card-surface p-5 sm:p-7">
+        <p className="eyebrow">Support</p>
+        <h1 className="mt-2 text-3xl font-black">Contact Support</h1>
         <p className="mt-2 text-ink/70">We usually respond within 1-2 business days.</p>
         <label className="mt-5 grid gap-1"><span className="label">Name</span><input className="field" name="name" required /></label>
         <label className="mt-4 grid gap-1"><span className="label">Email</span><input className="field" name="email" type="email" required /></label>
@@ -29,7 +30,7 @@ export default function ContactPage() {
         <button className="btn-primary mt-5">Send Message</button>
         {message ? <p className="mt-4 text-sm font-medium">{message}</p> : null}
       </form>
-      <aside className="h-fit rounded-lg border border-line bg-white p-5">
+      <aside className="card-surface h-fit p-5">
         <h2 className="text-xl font-black">Support</h2>
         <p className="mt-3 text-sm text-ink/70">{siteConfig.supportEmail}</p>
         <div className="mt-5 grid gap-2 text-sm">
