@@ -17,5 +17,9 @@ insert into public.admin_users (user_id, role) values ('AUTH_USER_ID', 'admin');
 - Public users can read active products only.
 - Public users cannot read orders directly.
 - Tracking uses `/api/orders/track` and requires matching order ID and email.
-- Admin users can manage products, orders, customers, events and product images.
+- Admin users can manage products, orders, customers, events, newsletter leads and product images.
 - Product images are served from the public `product-images` bucket; uploads are restricted to admins.
+
+## Newsletter Leads
+
+Run the latest schema or `supabase/migrations/2026-06-18_newsletter_leads.sql` to create `newsletter_leads`. The table is idempotent and can be run more than once without removing data.

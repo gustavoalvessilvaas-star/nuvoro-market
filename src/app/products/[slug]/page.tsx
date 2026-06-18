@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckCircle2, ShieldCheck, Truck } from "lucide-react";
-import { AddToCartActions } from "@/components/store/add-to-cart";
+import { AddToCartActions, StickyBuyNow } from "@/components/store/add-to-cart";
 import { ProductViewTracker } from "@/components/store/product-view-tracker";
 import { ProductCard } from "@/components/product-card";
 import { TrustBadges } from "@/components/store/trust-badges";
@@ -142,7 +141,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
       ) : null}
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 p-3 backdrop-blur md:hidden">
-        <Link href="/checkout" className="btn-primary w-full">Buy Now - {formatCurrency(product.price)}</Link>
+        <StickyBuyNow product={product} />
       </div>
     </>
   );

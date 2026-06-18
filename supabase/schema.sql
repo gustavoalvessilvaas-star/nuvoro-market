@@ -101,6 +101,14 @@ create table if not exists public.support_requests (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.newsletter_leads (
+  id uuid primary key default gen_random_uuid(),
+  email text unique not null,
+  source text not null default 'site',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.suppliers (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -159,6 +167,7 @@ alter table public.order_items enable row level security;
 alter table public.events enable row level security;
 alter table public.admin_users enable row level security;
 alter table public.support_requests enable row level security;
+alter table public.newsletter_leads enable row level security;
 alter table public.suppliers enable row level security;
 alter table public.product_validation_candidates enable row level security;
 
@@ -202,6 +211,9 @@ create policy "Admins manage product validation" on public.product_validation_ca
 
 drop policy if exists "Service inserts events" on public.events;
 create policy "Service inserts events" on public.events for insert with check (true);
+
+drop policy if exists "Admins manage newsletter leads" on public.newsletter_leads;
+create policy "Admins manage newsletter leads" on public.newsletter_leads for all using (public.is_admin()) with check (public.is_admin());
 
 insert into storage.buckets (id, name, public) values ('product-images', 'product-images', true)
 on conflict (id) do nothing;

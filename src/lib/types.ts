@@ -4,6 +4,7 @@ export type FulfillmentStatus = "order_received" | "processing" | "shipped" | "i
 export type EventName =
   | "PageView"
   | "ViewContent"
+  | "ViewItemList"
   | "AddToCart"
   | "ViewCart"
   | "InitiateCheckout"

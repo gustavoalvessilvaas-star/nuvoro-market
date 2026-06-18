@@ -27,10 +27,15 @@ export const trackingSchema = z.object({
 });
 
 export const eventSchema = z.object({
-  event_name: z.enum(["PageView", "ViewContent", "AddToCart", "ViewCart", "InitiateCheckout", "AddShippingInfo", "AddPaymentInfo", "Purchase", "Refund", "Lead", "Search", "ContactSubmit"]),
+  event_name: z.enum(["PageView", "ViewContent", "ViewItemList", "AddToCart", "ViewCart", "InitiateCheckout", "AddShippingInfo", "AddPaymentInfo", "Purchase", "Refund", "Lead", "Search", "ContactSubmit"]),
   product_id: z.string().optional(),
   order_id: z.string().optional(),
   customer_email: z.string().email().optional(),
   source: z.string().default("web"),
   metadata: z.record(z.unknown()).optional()
+});
+
+export const newsletterSchema = z.object({
+  email: z.string().email("Enter a valid email address"),
+  source: z.string().default("home_newsletter")
 });

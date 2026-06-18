@@ -70,3 +70,26 @@ export function QuickAddButton({ product }: { product: Product }) {
     </button>
   );
 }
+
+export function StickyBuyNow({ product }: { product: Product }) {
+  const { addItem } = useCart();
+  const router = useRouter();
+
+  function buyNow() {
+    addItem(product, 1, {
+      bundleId: "single",
+      bundleLabel: "1x",
+      unitPrice: product.price,
+      openDrawer: false
+    });
+    trackEvent("AddToCart", { product_id: product.id, value: product.price, source: "sticky_buy_now" });
+    trackEvent("InitiateCheckout", { product_id: product.id, value: product.price, source: "sticky_buy_now" });
+    router.push("/checkout");
+  }
+
+  return (
+    <button className="btn-primary w-full" onClick={buyNow}>
+      Buy Now - {formatCurrency(product.price)}
+    </button>
+  );
+}
