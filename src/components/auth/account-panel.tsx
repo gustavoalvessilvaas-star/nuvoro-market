@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogOut, PackageCheck, UserRound } from "lucide-react";
-import { getSupabaseBrowser } from "@/lib/supabase/browser";
+import { getSupabaseBrowser, getSupabaseBrowserConfigError } from "@/lib/supabase/browser";
 import type { Order } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
@@ -23,7 +23,7 @@ export function AccountPanel() {
     async function loadAccount() {
       const supabase = getSupabaseBrowser();
       if (!supabase) {
-        setError("Supabase Auth is not configured yet.");
+        setError(getSupabaseBrowserConfigError() || "Supabase Auth is not configured yet.");
         setLoading(false);
         return;
       }

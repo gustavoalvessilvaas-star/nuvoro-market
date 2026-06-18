@@ -13,9 +13,18 @@ Nuvoro Market now includes a customer login experience powered by Supabase Auth.
 
 Use the existing environment variables:
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_SUPABASE_URL`: must be the project base URL only, for example `https://PROJECT_REF.supabase.co`.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: public anon key from Supabase Project Settings > API.
+- `SUPABASE_SERVICE_ROLE_KEY`: server-only service role key, used by API routes and never exposed to the browser.
+- `NEXT_PUBLIC_SITE_URL`: local or production site origin, for example `http://localhost:3000` or `https://nuvoro-market.vercel.app`.
+
+Do not use these invalid Supabase URL formats:
+
+- `https://PROJECT_REF.supabase.co/auth/v1`
+- `https://PROJECT_REF.supabase.co/rest/v1`
+- `https://PROJECT_REF.supabase.co/anything-else`
+
+If the URL contains a path, Supabase Auth can fail with errors such as `Invalid path specified in request URL`.
 
 In Supabase Auth settings:
 
@@ -25,6 +34,8 @@ In Supabase Auth settings:
 3. Add the production Vercel URL when deployed:
    - `https://YOUR-PRODUCTION-DOMAIN/account`
 4. Configure email templates if you want branded confirmation and password reset emails.
+
+For production on Vercel, set the same variables in Project Settings > Environment Variables and redeploy after changing them.
 
 ## Account Orders
 

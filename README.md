@@ -51,6 +51,8 @@ See `.env.example` for the full list:
 - `META_CAPI_PIXEL_ID`
 - `ADMIN_EMAIL`
 
+`NEXT_PUBLIC_SUPABASE_URL` must be only the Supabase project base URL, like `https://PROJECT_REF.supabase.co`. Do not include `/auth/v1`, `/rest/v1`, or any other path.
+
 ## Manual Launch Checklist
 
 - Read `docs/access-and-integrations.md` for the exact app/tool access observed in this Codex environment.

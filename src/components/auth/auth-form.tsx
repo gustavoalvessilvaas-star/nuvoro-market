@@ -5,9 +5,14 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { getSupabaseBrowser } from "@/lib/supabase/browser";
+import { getSupabaseBrowser, getSupabaseBrowserConfigError } from "@/lib/supabase/browser";
 
 type AuthMode = "login" | "register" | "forgot-password";
+
+function friendlyAuthError(error: unknown) {
+  const detail = error instanceof Error ? error.message : "Unknown Supabase Auth error.";
+  return `${detail} Check that NEXT_PUBLIC_SUPABASE_URL is only the base project URL, for example https://PROJECT_REF.supabase.co.`;
+}
 
 export function AuthForm({ mode }: { mode: AuthMode }) {
   const router = useRouter();
@@ -27,7 +32,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
 
     const supabase = getSupabaseBrowser();
     if (!supabase) {
-      setError("Supabase Auth is not configured yet. Add the public Supabase URL and anon key.");
+      setError(getSupabaseBrowserConfigError() || "Supabase Auth is not configured yet.");
       setLoading(false);
       return;
     }
@@ -57,22 +62,32 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
     const redirectTo = `${window.location.origin}/account`;
 
     if (isForgot) {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-      if (resetError) setError(resetError.message);
-      else setMessage("If an account exists for that email, a password reset link has been sent.");
+      try {
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+        if (resetError) setError(resetError.message);
+        else setMessage("If an account exists for that email, a password reset link has been sent.");
+      } catch (resetError) {
+        setError(friendlyAuthError(resetError));
+      }
       setLoading(false);
       return;
     }
 
     if (isRegister) {
-      const { data, error: registerError } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: redirectTo } });
-      if (registerError) {
-        setError(registerError.message);
-        setLoading(false);
-        return;
-      }
-      if (!data.session) {
-        setMessage("Account created. Check your email to confirm your account before signing in.");
+      try {
+        const { data, error: registerError } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: redirectTo } });
+        if (registerError) {
+          setError(registerError.message);
+          setLoading(false);
+          return;
+        }
+        if (!data.session) {
+          setMessage("Account created. Check your email to confirm your account before signing in.");
+          setLoading(false);
+          return;
+        }
+      } catch (registerError) {
+        setError(friendlyAuthError(registerError));
         setLoading(false);
         return;
       }
@@ -81,9 +96,15 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
       return;
     }
 
-    const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-    if (loginError) {
-      setError(loginError.message);
+    try {
+      const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+      if (loginError) {
+        setError(loginError.message);
+        setLoading(false);
+        return;
+      }
+    } catch (loginError) {
+      setError(friendlyAuthError(loginError));
       setLoading(false);
       return;
     }

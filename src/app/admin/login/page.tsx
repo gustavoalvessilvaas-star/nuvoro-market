@@ -2,7 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { getSupabaseBrowser } from "@/lib/supabase/browser";
+import { getSupabaseBrowser, getSupabaseBrowserConfigError } from "@/lib/supabase/browser";
 
 export default function AdminLoginPage() {
   const [message, setMessage] = useState("");
@@ -12,7 +12,7 @@ export default function AdminLoginPage() {
     const formData = new FormData(event.currentTarget);
     const supabase = getSupabaseBrowser();
     if (!supabase) {
-      setMessage("Supabase Auth is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+      setMessage(getSupabaseBrowserConfigError() || "Supabase Auth is not configured yet.");
       return;
     }
     const email = String(formData.get("email"));

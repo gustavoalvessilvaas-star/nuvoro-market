@@ -1,15 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
+import { getSupabasePublicConfig, getSupabaseServiceConfig } from "@/lib/supabase/config";
 
 export function getSupabaseAdmin() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key, { auth: { persistSession: false } });
+  const config = getSupabaseServiceConfig();
+  if (!config.ok) return null;
+  return createClient(config.url, config.serviceRoleKey, { auth: { persistSession: false } });
 }
 
 export function getSupabasePublic() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key);
+  const config = getSupabasePublicConfig();
+  if (!config.ok) return null;
+  return createClient(config.url, config.anonKey);
 }
