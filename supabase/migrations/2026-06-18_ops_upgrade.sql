@@ -23,6 +23,10 @@ create table if not exists public.support_requests (
   updated_at timestamptz not null default now()
 );
 
+alter table public.support_requests add column if not exists order_id text;
+alter table public.support_requests drop constraint if exists support_requests_order_id_fkey;
+alter table public.support_requests alter column order_id type text using order_id::text;
+
 create table if not exists public.suppliers (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -63,37 +67,18 @@ alter table public.support_requests enable row level security;
 alter table public.suppliers enable row level security;
 alter table public.product_validation_candidates enable row level security;
 
-do $$
-begin
-  if not exists (
-    select 1 from pg_policies
-    where schemaname = 'public' and tablename = 'support_requests' and policyname = 'Admins manage support requests'
-  ) then
-    create policy "Admins manage support requests" on public.support_requests
-      for all using (public.is_admin()) with check (public.is_admin());
-  end if;
+drop policy if exists "Admins manage support requests" on public.support_requests;
+create policy "Admins manage support requests" on public.support_requests
+  for all using (public.is_admin()) with check (public.is_admin());
 
-  if not exists (
-    select 1 from pg_policies
-    where schemaname = 'public' and tablename = 'support_requests' and policyname = 'Service inserts support requests'
-  ) then
-    create policy "Service inserts support requests" on public.support_requests
-      for insert with check (true);
-  end if;
+drop policy if exists "Service inserts support requests" on public.support_requests;
+create policy "Service inserts support requests" on public.support_requests
+  for insert with check (true);
 
-  if not exists (
-    select 1 from pg_policies
-    where schemaname = 'public' and tablename = 'suppliers' and policyname = 'Admins manage suppliers'
-  ) then
-    create policy "Admins manage suppliers" on public.suppliers
-      for all using (public.is_admin()) with check (public.is_admin());
-  end if;
+drop policy if exists "Admins manage suppliers" on public.suppliers;
+create policy "Admins manage suppliers" on public.suppliers
+  for all using (public.is_admin()) with check (public.is_admin());
 
-  if not exists (
-    select 1 from pg_policies
-    where schemaname = 'public' and tablename = 'product_validation_candidates' and policyname = 'Admins manage product validation'
-  ) then
-    create policy "Admins manage product validation" on public.product_validation_candidates
-      for all using (public.is_admin()) with check (public.is_admin());
-  end if;
-end $$;
+drop policy if exists "Admins manage product validation" on public.product_validation_candidates;
+create policy "Admins manage product validation" on public.product_validation_candidates
+  for all using (public.is_admin()) with check (public.is_admin());

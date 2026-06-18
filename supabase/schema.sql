@@ -137,6 +137,21 @@ create table if not exists public.product_validation_candidates (
   updated_at timestamptz not null default now()
 );
 
+alter table public.products add column if not exists main_image_url text;
+alter table public.products add column if not exists gallery_image_urls jsonb not null default '[]'::jsonb;
+alter table public.products add column if not exists lifestyle_image_url text;
+alter table public.products add column if not exists demo_video_url text;
+alter table public.products add column if not exists gif_url text;
+alter table public.products add column if not exists alt_text text;
+alter table public.products add column if not exists media_status text not null default 'placeholder';
+
+alter table public.orders add column if not exists tracking_url text;
+alter table public.orders add column if not exists internal_notes text;
+
+alter table public.support_requests add column if not exists order_id text;
+alter table public.support_requests drop constraint if exists support_requests_order_id_fkey;
+alter table public.support_requests alter column order_id type text using order_id::text;
+
 alter table public.products enable row level security;
 alter table public.customers enable row level security;
 alter table public.orders enable row level security;
@@ -152,24 +167,53 @@ returns boolean language sql stable security definer as $$
   select exists(select 1 from public.admin_users where user_id = auth.uid());
 $$;
 
+drop policy if exists "Public can read active products" on public.products;
 create policy "Public can read active products" on public.products for select using (status = 'active');
+
+drop policy if exists "Admins manage products" on public.products;
 create policy "Admins manage products" on public.products for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Admins manage customers" on public.customers;
 create policy "Admins manage customers" on public.customers for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Admins manage orders" on public.orders;
 create policy "Admins manage orders" on public.orders for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Admins manage order items" on public.order_items;
 create policy "Admins manage order items" on public.order_items for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Admins manage events" on public.events;
 create policy "Admins manage events" on public.events for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Admins read admin users" on public.admin_users;
 create policy "Admins read admin users" on public.admin_users for select using (public.is_admin());
+
+drop policy if exists "Admins manage support requests" on public.support_requests;
 create policy "Admins manage support requests" on public.support_requests for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Service inserts support requests" on public.support_requests;
 create policy "Service inserts support requests" on public.support_requests for insert with check (true);
+
+drop policy if exists "Admins manage suppliers" on public.suppliers;
 create policy "Admins manage suppliers" on public.suppliers for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Admins manage product validation" on public.product_validation_candidates;
 create policy "Admins manage product validation" on public.product_validation_candidates for all using (public.is_admin()) with check (public.is_admin());
 
+drop policy if exists "Service inserts events" on public.events;
 create policy "Service inserts events" on public.events for insert with check (true);
 
 insert into storage.buckets (id, name, public) values ('product-images', 'product-images', true)
 on conflict (id) do nothing;
 
+drop policy if exists "Public reads product images" on storage.objects;
 create policy "Public reads product images" on storage.objects for select using (bucket_id = 'product-images');
+
+drop policy if exists "Admins upload product images" on storage.objects;
 create policy "Admins upload product images" on storage.objects for insert with check (bucket_id = 'product-images' and public.is_admin());
+
+drop policy if exists "Admins update product images" on storage.objects;
 create policy "Admins update product images" on storage.objects for update using (bucket_id = 'product-images' and public.is_admin());
+
+drop policy if exists "Admins delete product images" on storage.objects;
 create policy "Admins delete product images" on storage.objects for delete using (bucket_id = 'product-images' and public.is_admin());
