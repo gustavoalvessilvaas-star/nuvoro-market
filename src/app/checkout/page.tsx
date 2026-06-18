@@ -24,7 +24,15 @@ export default function CheckoutPage() {
     trackEvent("InitiateCheckout", { value: subtotal });
     const payload = {
       customer: Object.fromEntries(formData.entries()),
-      items: items.map((item) => ({ product_id: item.product.id, quantity: item.quantity, product: item.product })),
+      items: items.map((item) => ({
+        cart_id: item.cart_id,
+        product_id: item.product.id,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        bundle_id: item.bundle_id,
+        bundle_label: item.bundle_label,
+        product: item.product
+      })),
       utm: getStoredUtms()
     };
     const response = await fetch("/api/checkout/stripe", {
@@ -60,13 +68,13 @@ export default function CheckoutPage() {
         <p className="mt-2 text-sm leading-6 text-ink/60">Enter your shipping details. Payments are handled by Stripe, and Nuvoro Market never stores card numbers.</p>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {[
-            ["customer_name", "Full name"], ["customer_email", "Email"], ["customer_phone", "Phone"],
+            ["customer_name", "Full name"], ["customer_email", "Email"], ["customer_phone", "Phone (optional)"],
             ["address1", "Address line 1"], ["address2", "Address line 2"], ["city", "City"],
             ["state", "State"], ["zip", "ZIP code"]
           ].map(([name, label]) => (
             <label key={name} className="grid gap-1">
               <span className="label">{label}</span>
-              <input className="field" name={name} required={name !== "address2"} />
+              <input className="field" name={name} required={name !== "address2" && name !== "customer_phone"} />
             </label>
           ))}
           <label className="grid gap-1">
@@ -83,10 +91,10 @@ export default function CheckoutPage() {
         <h2 className="text-xl font-black">Order Summary</h2>
         <div className="mt-4 grid gap-4">
           {items.map((item) => (
-            <div key={item.product.id} className="grid grid-cols-[64px_1fr_auto] gap-3 text-sm">
+            <div key={item.cart_id} className="grid grid-cols-[64px_1fr_auto] gap-3 text-sm">
               <Image src={item.product.images[0]} alt={item.product.name} width={80} height={80} className="aspect-square rounded-md object-cover" />
-              <div><p className="font-bold">{item.product.name}</p><p className="text-ink/60">Qty {item.quantity}</p></div>
-              <p className="font-bold">{formatCurrency(item.product.price * item.quantity)}</p>
+              <div><p className="font-bold">{item.product.name}</p><p className="text-ink/60">{item.bundle_label ? `${item.bundle_label} - ` : ""}Qty {item.quantity}</p></div>
+              <p className="font-bold">{formatCurrency(item.unit_price * item.quantity)}</p>
             </div>
           ))}
         </div>

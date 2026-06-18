@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
+import { QuickAddButton } from "@/components/store/add-to-cart";
 
 export function ProductCard({ product }: { product: Product }) {
   const discount = product.compare_at_price ? Math.round((1 - product.price / product.compare_at_price) * 100) : null;
@@ -22,7 +23,10 @@ export function ProductCard({ product }: { product: Product }) {
           {product.compare_at_price ? <span className="text-sm text-ink/50 line-through">{formatCurrency(product.compare_at_price)}</span> : null}
           {discount ? <span className="rounded-full bg-mint px-2.5 py-1 text-xs font-bold text-moss">{discount}% off</span> : null}
         </div>
-        <Link href={`/products/${product.slug}`} className="btn-primary w-full">View Product</Link>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <QuickAddButton product={product} />
+          <Link href={`/products/${product.slug}`} className="btn-secondary w-full">Details</Link>
+        </div>
       </div>
     </article>
   );

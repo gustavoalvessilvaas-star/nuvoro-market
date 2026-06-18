@@ -3,7 +3,7 @@ import { z } from "zod";
 export const checkoutSchema = z.object({
   customer_name: z.string().min(2, "Enter your full name"),
   customer_email: z.string().email("Enter a valid email"),
-  customer_phone: z.string().min(7, "Enter a phone number"),
+  customer_phone: z.string().optional(),
   address1: z.string().min(3, "Enter address line 1"),
   address2: z.string().optional(),
   city: z.string().min(2, "Enter city"),
@@ -15,7 +15,10 @@ export const checkoutSchema = z.object({
 export const contactSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
-  message: z.string().min(10)
+  order_id: z.string().optional(),
+  reason: z.enum(["Order question", "Tracking", "Return/refund", "Product question", "Other"]),
+  message: z.string().min(10),
+  company: z.string().optional()
 });
 
 export const trackingSchema = z.object({
@@ -24,7 +27,7 @@ export const trackingSchema = z.object({
 });
 
 export const eventSchema = z.object({
-  event_name: z.enum(["PageView", "ViewContent", "AddToCart", "InitiateCheckout", "Purchase", "Lead", "Search"]),
+  event_name: z.enum(["PageView", "ViewContent", "AddToCart", "ViewCart", "InitiateCheckout", "AddShippingInfo", "AddPaymentInfo", "Purchase", "Refund", "Lead", "Search", "ContactSubmit"]),
   product_id: z.string().optional(),
   order_id: z.string().optional(),
   customer_email: z.string().email().optional(),

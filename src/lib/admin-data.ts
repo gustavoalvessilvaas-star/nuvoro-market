@@ -9,14 +9,16 @@ export async function getAdminDashboard() {
       orders: [],
       customers: [],
       events: [],
+      supportRequests: [],
       metrics: { revenue: 0, totalOrders: 0, pendingOrders: 0, shippedOrders: 0, eventCount: 0 }
     };
   }
-  const [{ data: products }, { data: orders }, { data: customers }, { data: events }] = await Promise.all([
+  const [{ data: products }, { data: orders }, { data: customers }, { data: events }, supportResult] = await Promise.all([
     supabase.from("products").select("*").order("created_at", { ascending: false }),
     supabase.from("orders").select("*").order("created_at", { ascending: false }),
     supabase.from("customers").select("*").order("created_at", { ascending: false }),
-    supabase.from("events").select("*").order("created_at", { ascending: false }).limit(200)
+    supabase.from("events").select("*").order("created_at", { ascending: false }).limit(200),
+    supabase.from("support_requests").select("*").order("created_at", { ascending: false }).limit(100)
   ]);
   const orderRows = orders || [];
   return {
@@ -24,6 +26,7 @@ export async function getAdminDashboard() {
     orders: orderRows,
     customers: customers || [],
     events: events || [],
+    supportRequests: supportResult.data || [],
     metrics: {
       revenue: orderRows.filter((order) => order.payment_status === "paid").reduce((sum, order) => sum + Number(order.total_amount || 0), 0),
       totalOrders: orderRows.length,

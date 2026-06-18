@@ -15,6 +15,7 @@ export function AccountPanel() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [loggedOut, setLoggedOut] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -30,7 +31,8 @@ export function AccountPanel() {
       const { data: sessionData } = await supabase.auth.getSession();
       const session = sessionData.session;
       if (!session?.user) {
-        router.replace("/login");
+        setLoggedOut(true);
+        setLoading(false);
         return;
       }
 
@@ -67,6 +69,27 @@ export function AccountPanel() {
         <div className="card-surface mx-auto max-w-3xl p-8">
           <div className="h-6 w-40 animate-pulse rounded-full bg-line" />
           <div className="mt-6 h-24 animate-pulse rounded-lg bg-cloud" />
+        </div>
+      </section>
+    );
+  }
+
+  if (loggedOut) {
+    return (
+      <section className="container-page py-12">
+        <div className="card-surface mx-auto max-w-3xl p-8 text-center shadow-soft">
+          <p className="eyebrow">Customer account</p>
+          <h1 className="mt-2 text-4xl font-black text-ink">Track orders with less friction.</h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-ink/60">Create or access your account to view purchase history, track order status, speed up support, and keep your order email connected for future purchases.</p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link href="/login" className="btn-primary">Login</Link>
+            <Link href="/register" className="btn-secondary">Create Account</Link>
+          </div>
+          <div className="mt-8 grid gap-3 text-left sm:grid-cols-2">
+            {["Track orders", "View purchase history", "Faster support", "Save email for future orders"].map((item) => (
+              <p key={item} className="rounded-2xl bg-cloud p-4 text-sm font-bold text-ink">{item}</p>
+            ))}
+          </div>
         </div>
       </section>
     );

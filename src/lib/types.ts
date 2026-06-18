@@ -1,7 +1,27 @@
 export type ProductStatus = "active" | "inactive";
 export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 export type FulfillmentStatus = "order_received" | "processing" | "shipped" | "in_transit" | "delivered";
-export type EventName = "PageView" | "ViewContent" | "AddToCart" | "InitiateCheckout" | "Purchase" | "Lead" | "Search";
+export type EventName =
+  | "PageView"
+  | "ViewContent"
+  | "AddToCart"
+  | "ViewCart"
+  | "InitiateCheckout"
+  | "AddShippingInfo"
+  | "AddPaymentInfo"
+  | "Purchase"
+  | "Refund"
+  | "Lead"
+  | "Search"
+  | "ContactSubmit";
+
+export type BundleOption = {
+  id: string;
+  label: string;
+  quantity: number;
+  totalPrice: number;
+  badge?: string;
+};
 
 export type Product = {
   id: string;
@@ -28,8 +48,12 @@ export type Product = {
 };
 
 export type CartItem = {
+  cart_id: string;
   product: Product;
   quantity: number;
+  unit_price: number;
+  bundle_id?: string;
+  bundle_label?: string;
 };
 
 export type ShippingAddress = {

@@ -23,6 +23,7 @@ export default async function AdminPage() {
           <Link href="/admin/orders" className="btn-secondary">Orders</Link>
           <Link href="/admin/customers" className="btn-secondary">Customers</Link>
           <Link href="/admin/events" className="btn-secondary">Events</Link>
+          <Link href="/admin/support" className="btn-secondary">Support</Link>
         </div>
       </div>
       <p className="mt-4 rounded-md bg-mint p-4 text-sm text-ink/75">Supabase Auth should protect this route in production with middleware and the admin_users table. Without Supabase keys, this dashboard uses seed/fallback data.</p>

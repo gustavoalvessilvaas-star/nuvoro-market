@@ -22,3 +22,9 @@ export const fulfillmentSteps = [
   "in_transit",
   "delivered"
 ] as const;
+
+export const defaultBundleOptions = [
+  { id: "single", label: "1x", quantity: 1, totalPrice: 29.95 },
+  { id: "double", label: "2x Bundle", quantity: 2, totalPrice: 49.95, badge: "Best Value" },
+  { id: "triple", label: "3x Family Pack", quantity: 3, totalPrice: 64.95 }
+] as const;

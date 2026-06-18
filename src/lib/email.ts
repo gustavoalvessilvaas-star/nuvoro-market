@@ -22,7 +22,7 @@ export const emailTemplates = {
   paymentApproved: (order: Partial<Order>) => `<h1>Payment approved</h1><p>Your payment for order ${order.id} was approved.</p>`,
   shipped: (order: Partial<Order>) => `<h1>Your order shipped</h1><p>Tracking code: ${order.tracking_code || "Pending"}</p>`,
   delivered: (order: Partial<Order>) => `<h1>Delivered</h1><p>Your order ${order.id} is marked delivered.</p>`,
-  supportNotification: (data: { name: string; email: string; message: string }) => `<h1>New support request</h1><p>${data.name} (${data.email})</p><p>${data.message}</p>`
+  supportNotification: (data: { name: string; email: string; message: string; reason?: string; order_id?: string }) => `<h1>New support request</h1><p>${data.name} (${data.email})</p><p>Reason: ${data.reason || "Not provided"}</p><p>Order: ${data.order_id || "Not provided"}</p><p>${data.message}</p>`
 };
 
 export async function sendOrderConfirmation(order: Partial<Order>) {
@@ -30,6 +30,6 @@ export async function sendOrderConfirmation(order: Partial<Order>) {
   return send(order.customer_email, "Nuvoro Market order confirmation", emailTemplates.orderConfirmation(order));
 }
 
-export async function sendSupportNotification(data: { name: string; email: string; message: string }) {
+export async function sendSupportNotification(data: { name: string; email: string; message: string; reason?: string; order_id?: string }) {
   return send(support, "New Nuvoro Market support request", emailTemplates.supportNotification(data));
 }

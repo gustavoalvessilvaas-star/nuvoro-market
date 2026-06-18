@@ -4,18 +4,33 @@ import { getStripe } from "@/lib/stripe";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { siteUrl } from "@/lib/utils";
 
+type CheckoutItem = {
+  cart_id?: string;
+  product_id: string;
+  quantity: number;
+  unit_price?: number;
+  bundle_id?: string;
+  bundle_label?: string;
+  product: {
+    id?: string;
+    name: string;
+    description: string;
+    price: number;
+  };
+};
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const parsed = checkoutSchema.safeParse(body.customer || {});
   if (!parsed.success) return NextResponse.json({ error: "Invalid customer information" }, { status: 400 });
-  const items = Array.isArray(body.items) ? body.items : [];
+  const items = Array.isArray(body.items) ? body.items as CheckoutItem[] : [];
   if (!items.length) return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
 
   const stripe = getStripe();
   if (!stripe) return NextResponse.json({ error: "Stripe is not configured. Add STRIPE_SECRET_KEY to enable checkout." }, { status: 503 });
 
   const supabase = getSupabaseAdmin();
-  const total = items.reduce((sum: number, item: { product: { price: number }; quantity: number }) => sum + item.product.price * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + Number(item.unit_price || item.product.price) * item.quantity, 0);
   let orderId = `dev_${Date.now()}`;
   if (supabase) {
     const { data: customer } = await supabase.from("customers").upsert({
@@ -42,24 +57,24 @@ export async function POST(request: Request) {
     }).select("id").single();
     if (error) return NextResponse.json({ error: "Order could not be created" }, { status: 500 });
     orderId = data.id;
-    await supabase.from("order_items").insert(items.map((item: { product_id: string; quantity: number; product: { price: number } }) => ({
+    await supabase.from("order_items").insert(items.map((item) => ({
       order_id: orderId,
       product_id: item.product_id,
       quantity: item.quantity,
-      unit_price: item.product.price,
-      product_snapshot: item.product
+      unit_price: Number(item.unit_price || item.product.price),
+      product_snapshot: { ...item.product, bundle_id: item.bundle_id, bundle_label: item.bundle_label }
     })));
   }
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     customer_email: parsed.data.customer_email,
-    line_items: items.map((item: { product: { name: string; description: string; price: number }; quantity: number }) => ({
+    line_items: items.map((item) => ({
       quantity: item.quantity,
       price_data: {
         currency: "usd",
-        unit_amount: Math.round(item.product.price * 100),
-        product_data: { name: item.product.name, description: item.product.description }
+        unit_amount: Math.round(Number(item.unit_price || item.product.price) * 100),
+        product_data: { name: item.bundle_label ? `${item.product.name} (${item.bundle_label})` : item.product.name, description: item.product.description }
       }
     })),
     shipping_address_collection: { allowed_countries: ["US"] },

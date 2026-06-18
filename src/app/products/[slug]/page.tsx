@@ -24,6 +24,13 @@ export default async function ProductPage({ params }: { params: { slug: string }
   if (!product) notFound();
   const related = (await getStoreProducts()).filter((item) => item.category === product.category && item.id !== product.id).slice(0, 4);
   const discount = product.compare_at_price ? Math.round((1 - product.price / product.compare_at_price) * 100) : null;
+  const isPawTrim = product.slug === "pawtrim-led-grinder";
+  const problemBullets = isPawTrim
+    ? ["Traditional clippers can feel stressful for pets and owners.", "Dark nails can make it harder to see where to trim.", "Pets may move suddenly, making nail care feel rushed.", "Professional grooming can be inconvenient for routine touch-ups."]
+    : ["Small everyday frustrations can slow down routines.", "Cheap tools often feel random instead of useful.", "A clear use case makes a product easier to trust."];
+  const howToUse = isPawTrim
+    ? ["Let your pet get comfortable with the sound.", "Turn on the LED and approach slowly.", "Use light, gradual passes instead of forcing it.", "Take breaks and reward calm behavior.", "Follow the final supplier safety instructions."]
+    : ["Review the included instructions.", "Use the product for its intended everyday task.", "Start gently and adjust based on your setup.", "Contact support if anything arrives damaged or unclear."];
 
   return (
     <>
@@ -62,12 +69,48 @@ export default async function ProductPage({ params }: { params: { slug: string }
       </section>
 
       <section className="soft-section py-12">
-        <div className="container-page grid gap-8 md:grid-cols-3">
-          <div><h2 className="text-2xl font-black">Problem</h2><p className="mt-3 text-ink/70">Small everyday frustrations can slow down routines and create clutter.</p></div>
-          <div><h2 className="text-2xl font-black">Solution</h2><p className="mt-3 text-ink/70">{product.name} gives you a practical tool designed around a clear use case.</p></div>
-          <div><h2 className="text-2xl font-black">How it works</h2><p className="mt-3 text-ink/70">Order online, receive tracking when available, and use the product as directed by the final supplier instructions.</p></div>
+        <div className="container-page grid gap-8 lg:grid-cols-3">
+          <div className="card-surface p-6">
+            <h2 className="text-2xl font-black">The Problem</h2>
+            <ul className="mt-4 grid gap-3 text-sm leading-6 text-ink/70">
+              {problemBullets.map((item) => <li key={item} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-moss" /> {item}</li>)}
+            </ul>
+          </div>
+          <div className="card-surface p-6">
+            <h2 className="text-2xl font-black">The Nuvoro Solution</h2>
+            <p className="mt-4 text-sm leading-6 text-ink/70">{isPawTrim ? "PawTrim helps turn nail care into a slower, more controlled routine. The LED supports visibility, while the grinder approach can feel less abrupt than clipping all at once." : `${product.name} gives you a practical tool designed around a clear everyday use case.`}</p>
+          </div>
+          <div className="card-surface p-6">
+            <h2 className="text-2xl font-black">How to Use</h2>
+            <ol className="mt-4 grid gap-3 text-sm leading-6 text-ink/70">
+              {howToUse.map((item, index) => <li key={item} className="flex gap-3"><span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-mint text-xs font-black text-moss">{index + 1}</span>{item}</li>)}
+            </ol>
+          </div>
         </div>
       </section>
+
+      {isPawTrim ? (
+        <section className="container-page py-12">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="card-surface p-6">
+              <h2 className="text-2xl font-black">Traditional Clipper</h2>
+              <ul className="mt-4 grid gap-3 text-sm text-ink/70">
+                <li>Can feel abrupt for nervous pets.</li>
+                <li>Requires more confidence around dark nails.</li>
+                <li>One quick cut can feel stressful if your pet moves.</li>
+              </ul>
+            </div>
+            <div className="card-surface border-moss bg-mint p-6">
+              <h2 className="text-2xl font-black">PawTrim LED Grinder</h2>
+              <ul className="mt-4 grid gap-3 text-sm text-ink/75">
+                <li>Gradual grinding for more controlled passes.</li>
+                <li>LED light supports better visibility.</li>
+                <li>Compact tool for routine at-home grooming.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="container-page grid gap-8 py-12 lg:grid-cols-2">
         <div className="card-surface p-6">
