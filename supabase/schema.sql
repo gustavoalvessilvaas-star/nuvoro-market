@@ -93,7 +93,7 @@ create table if not exists public.support_requests (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   email text not null,
-  order_id uuid references public.orders(id),
+  order_id text,
   reason text not null,
   message text not null,
   status text not null default 'open',
