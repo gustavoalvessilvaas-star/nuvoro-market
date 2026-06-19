@@ -145,6 +145,7 @@ export function AccountPanel() {
                     <div className="text-left sm:text-right">
                       <p className="font-black">{formatCurrency(Number(order.total_amount))}</p>
                       <p className="text-sm text-ink/60">{order.payment_status}</p>
+                      <Link href={`/order-tracking`} className="mt-2 inline-flex text-sm font-black text-moss">Track order</Link>
                     </div>
                   </div>
                 </article>

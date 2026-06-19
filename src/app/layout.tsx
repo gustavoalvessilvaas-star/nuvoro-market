@@ -11,6 +11,7 @@ import { siteConfig } from "@/lib/constants";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://nuvoro-market.vercel.app"),
   title: {
     default: `${siteConfig.name} | ${siteConfig.slogan}`,
     template: `%s | ${siteConfig.name}`
@@ -19,6 +20,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://nuvoro-market.vercel.app",
+    siteName: siteConfig.name,
     type: "website"
   }
 };

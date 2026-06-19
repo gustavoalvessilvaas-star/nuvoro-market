@@ -7,6 +7,7 @@ import { ProductViewTracker } from "@/components/store/product-view-tracker";
 import { ProductCard } from "@/components/product-card";
 import { TrustBadges } from "@/components/store/trust-badges";
 import { getActiveProducts, getProductBySlug, getStoreProductBySlug, getStoreProducts } from "@/lib/products";
+import { getProductAlt, getProductImages } from "@/lib/product-media";
 import { formatCurrency } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -15,13 +16,25 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const product = getProductBySlug(params.slug);
-  return { title: product?.name || "Product", description: product?.short_description };
+  const images = product ? getProductImages(product) : [];
+  return {
+    title: product?.seo_title || product?.name || "Product",
+    description: product?.seo_description || product?.short_description,
+    openGraph: product ? {
+      title: product.seo_title || product.name,
+      description: product.seo_description || product.short_description,
+      images: images[0] ? [{ url: images[0], alt: getProductAlt(product) }] : undefined
+    } : undefined
+  };
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
   const product = await getStoreProductBySlug(params.slug);
   if (!product) notFound();
-  const related = (await getStoreProducts()).filter((item) => item.category === product.category && item.id !== product.id).slice(0, 4);
+  const allProducts = await getStoreProducts();
+  const related = allProducts.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 4);
+  const frequentlyBought = allProducts.filter((item) => item.id !== product.id).slice(0, 4);
+  const productImages = getProductImages(product);
   const discount = product.compare_at_price ? Math.round((1 - product.price / product.compare_at_price) * 100) : null;
   const isPawTrim = product.slug === "pawtrim-led-grinder";
   const problemBullets = isPawTrim
@@ -34,32 +47,34 @@ export default async function ProductPage({ params }: { params: { slug: string }
   return (
     <>
       <ProductViewTracker productId={product.id} value={product.price} />
-      <section className="container-page grid gap-10 py-10 lg:grid-cols-[1fr_.9fr]">
+      <section className="dark-section">
+        <div className="container-page grid gap-10 py-10 lg:grid-cols-[1fr_.9fr]">
         <div className="grid gap-4">
-          <Image src={product.images[0]} alt={`${product.name} placeholder`} width={900} height={700} className="aspect-[4/3] rounded-[2rem] border border-line bg-mint object-cover shadow-soft" priority />
+          <Image src={productImages[0]} alt={getProductAlt(product, "main image")} width={900} height={700} className="aspect-[4/3] rounded-[2rem] border border-white/15 bg-white/10 object-cover shadow-glow" priority />
           <div className="grid grid-cols-4 gap-3">
-            {product.images.map((image) => <Image key={image} src={image} alt={`${product.name} gallery placeholder`} width={220} height={160} className="aspect-[4/3] rounded-2xl border border-line bg-white object-cover" />)}
+            {productImages.slice(0, 4).map((image, index) => <Image key={image} src={image} alt={getProductAlt(product, `gallery image ${index + 1}`)} width={220} height={160} className="aspect-[4/3] rounded-2xl border border-white/15 bg-white/10 object-cover" />)}
           </div>
         </div>
-        <div className="card-surface h-fit p-6 lg:p-8">
-          <p className="eyebrow">{product.category}</p>
-          <h1 className="mt-3 text-balance text-4xl font-black leading-tight text-ink">{product.headline}</h1>
-          <p className="mt-4 text-lg leading-8 text-ink/70">{product.subheadline}</p>
+        <div className="premium-panel h-fit p-6 lg:p-8">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-aqua">{product.category}</p>
+          <h1 className="mt-3 text-balance text-4xl font-black leading-tight text-white">{product.headline}</h1>
+          <p className="mt-4 text-lg leading-8 text-white/70">{product.subheadline}</p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <span className="text-4xl font-black">{formatCurrency(product.price)}</span>
-            {product.compare_at_price ? <span className="text-lg text-ink/45 line-through">{formatCurrency(product.compare_at_price)}</span> : null}
-            {discount ? <span className="rounded-full bg-mint px-3 py-2 text-sm font-bold text-moss">Save {discount}%</span> : null}
+            {product.compare_at_price ? <span className="text-lg text-white/45 line-through">{formatCurrency(product.compare_at_price)}</span> : null}
+            {discount ? <span className="rounded-full bg-coral px-3 py-2 text-sm font-black text-white">Save {discount}%</span> : null}
           </div>
           <div className="mt-6"><AddToCartActions product={product} /></div>
           <div className="mt-6 grid gap-3">
             {product.benefits.map((benefit) => (
-              <p key={benefit} className="flex gap-2 text-sm font-medium text-ink/70"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-moss" /> {benefit}</p>
+              <p key={benefit} className="flex gap-2 text-sm font-medium text-white/75"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-aqua" /> {benefit}</p>
             ))}
           </div>
-          <div className="mt-6 grid gap-3 rounded-2xl border border-line bg-cloud p-5">
-            <p className="flex gap-2 text-sm"><Truck className="h-4 w-4 text-moss" /> {product.shipping_estimate}</p>
-            <p className="flex gap-2 text-sm"><ShieldCheck className="h-4 w-4 text-moss" /> 30-day support window after delivery.</p>
+          <div className="mt-6 grid gap-3 rounded-2xl border border-white/15 bg-white/10 p-5">
+            <p className="flex gap-2 text-sm text-white/75"><Truck className="h-4 w-4 text-aqua" /> {product.shipping_estimate}</p>
+            <p className="flex gap-2 text-sm text-white/75"><ShieldCheck className="h-4 w-4 text-aqua" /> 30-day support window after delivery.</p>
           </div>
+        </div>
         </div>
       </section>
 
@@ -111,6 +126,33 @@ export default async function ProductPage({ params }: { params: { slug: string }
         </section>
       ) : null}
 
+      {isPawTrim ? (
+        <section className="soft-section py-12">
+          <div className="container-page grid gap-6 lg:grid-cols-3">
+            <div className="card-surface p-6">
+              <h2 className="text-2xl font-black">What&apos;s Included</h2>
+              <ul className="mt-4 grid gap-3 text-sm leading-6 text-ink/70">
+                {["PawTrim LED Grinder", "Charging cable or battery note based on final supplier model", "Basic instruction insert placeholder", "Protective packaging details to confirm before launch"].map((item) => <li key={item} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-moss" /> {item}</li>)}
+              </ul>
+            </div>
+            <div className="card-surface p-6">
+              <h2 className="text-2xl font-black">Why Pet Owners Choose It</h2>
+              <p className="mt-4 text-sm leading-6 text-ink/70">PawTrim is built around a calmer routine: better visibility, gradual passes and a compact tool that helps owners feel more in control.</p>
+              <p className="mt-4 rounded-2xl bg-cloud p-4 text-sm font-bold text-ink/70">Verified reviews coming soon after real customer orders are fulfilled.</p>
+            </div>
+            <div className="card-surface p-6">
+              <h2 className="text-2xl font-black">Shipping & Support</h2>
+              <div className="mt-4 grid gap-3 text-sm leading-6 text-ink/70">
+                <p>Processing: 2-4 business days placeholder.</p>
+                <p>Tracking is added when available from the supplier or carrier.</p>
+                <a href="/policies/shipping-policy" className="font-black text-moss">Read shipping policy</a>
+                <a href="/contact" className="font-black text-moss">Contact support</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="container-page grid gap-8 py-12 lg:grid-cols-2">
         <div className="card-surface p-6">
           <h2 className="text-2xl font-black">Product Details</h2>
@@ -137,6 +179,14 @@ export default async function ProductPage({ params }: { params: { slug: string }
         <section className="container-page py-12">
           <h2 className="text-2xl font-black">Related Products</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{related.map((item) => <ProductCard key={item.id} product={item} />)}</div>
+        </section>
+      ) : null}
+
+      {isPawTrim ? (
+        <section className="container-page py-12">
+          <h2 className="text-2xl font-black">Frequently Bought Together</h2>
+          <p className="mt-2 max-w-2xl text-sm text-ink/60">Use existing catalog items as complementary smart finds until dedicated pet accessories are approved.</p>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{frequentlyBought.map((item) => <ProductCard key={item.id} product={item} />)}</div>
         </section>
       ) : null}
 

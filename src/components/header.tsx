@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Menu, ShoppingBag, UserRound, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { BrandLogo } from "@/components/brand-logo";
 import { useCart } from "@/components/store/cart-provider";
-import { siteConfig } from "@/lib/constants";
 import { getSupabaseBrowser } from "@/lib/supabase/browser";
 
 const links = [
   { href: "/products", label: "Shop" },
+  { href: "/#categories", label: "Categories" },
   { href: "/order-tracking", label: "Track Order" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" }
@@ -47,15 +48,16 @@ export function Header() {
     : [{ href: "/login", label: "Login" }, { href: "/register", label: "Create Account" }];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/80 bg-white/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/70 bg-white/80 backdrop-blur-xl">
+      <div className="hidden border-b border-white/60 bg-night text-white sm:block">
+        <div className="container-page flex items-center justify-center gap-6 py-2 text-xs font-black text-white/80 lg:justify-between">
+          {["Free Shipping", "Secure Checkout", "30-Day Support", "Tracking Included", "Helpful Support"].map((item) => (
+            <span key={item}>{item}</span>
+          ))}
+        </div>
+      </div>
       <div className="container-page flex min-h-16 items-center justify-between gap-4 py-3">
-        <Link href="/" className="group flex items-center gap-3 font-black text-ink" onClick={() => setOpen(false)}>
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-ink text-white shadow-sm group-hover:bg-moss">N</span>
-          <span className="leading-tight">
-            <span className="block">{siteConfig.name}</span>
-            <span className="hidden text-xs font-bold text-ink/50 sm:block">Smart Everyday Essentials</span>
-          </span>
-        </Link>
+        <BrandLogo onClick={() => setOpen(false)} />
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
           {links.map((link) => (
             <Link key={link.href} href={link.href} className={`nav-link ${pathname === link.href ? "nav-link-active" : ""}`}>
@@ -77,7 +79,7 @@ export function Header() {
               </button>
             ) : null}
           </div>
-          <Link href="/cart" aria-label="Cart" className="relative grid h-11 w-11 place-items-center rounded-full border border-line bg-white shadow-sm hover:border-moss hover:text-moss">
+          <Link href="/cart" aria-label="Cart" className="relative grid h-11 w-11 place-items-center rounded-full border border-white bg-white shadow-sm hover:border-aqua hover:text-moss">
             <ShoppingBag className="h-5 w-5" />
             {count > 0 ? <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-coral px-1 text-xs font-bold text-white">{count}</span> : null}
           </Link>

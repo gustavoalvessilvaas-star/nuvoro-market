@@ -19,6 +19,12 @@ create table if not exists public.products (
   demo_video_url text,
   gif_url text,
   alt_text text,
+  seo_title text,
+  seo_description text,
+  bundle_options jsonb not null default '[]'::jsonb,
+  related_product_ids jsonb not null default '[]'::jsonb,
+  how_it_works jsonb not null default '[]'::jsonb,
+  risk_notes text,
   media_status text not null default 'placeholder' check (media_status in ('placeholder','supplier-approved','original-content')),
   benefits jsonb not null default '[]'::jsonb,
   details jsonb not null default '{}'::jsonb,
@@ -114,11 +120,14 @@ create table if not exists public.suppliers (
   name text not null,
   platform text,
   supplier_url text,
+  product_cost numeric(10,2),
+  shipping_cost numeric(10,2),
   contact_email text,
   warehouse_location text,
   average_shipping_days int,
   tracking_quality text,
   return_policy_notes text,
+  compliance_notes text,
   product_quality_score int,
   sample_ordered boolean not null default false,
   sample_received boolean not null default false,
@@ -151,7 +160,17 @@ alter table public.products add column if not exists lifestyle_image_url text;
 alter table public.products add column if not exists demo_video_url text;
 alter table public.products add column if not exists gif_url text;
 alter table public.products add column if not exists alt_text text;
+alter table public.products add column if not exists seo_title text;
+alter table public.products add column if not exists seo_description text;
+alter table public.products add column if not exists bundle_options jsonb not null default '[]'::jsonb;
+alter table public.products add column if not exists related_product_ids jsonb not null default '[]'::jsonb;
+alter table public.products add column if not exists how_it_works jsonb not null default '[]'::jsonb;
+alter table public.products add column if not exists risk_notes text;
 alter table public.products add column if not exists media_status text not null default 'placeholder';
+
+alter table public.suppliers add column if not exists product_cost numeric(10,2);
+alter table public.suppliers add column if not exists shipping_cost numeric(10,2);
+alter table public.suppliers add column if not exists compliance_notes text;
 
 alter table public.orders add column if not exists tracking_url text;
 alter table public.orders add column if not exists internal_notes text;

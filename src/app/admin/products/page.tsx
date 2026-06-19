@@ -1,13 +1,17 @@
+import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminDashboard } from "@/lib/admin-data";
 import { formatCurrency } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminProductsPage() {
+  await requireAdmin();
   const { products } = await getAdminDashboard();
   return (
     <section className="container-page py-10">
       <h1 className="text-4xl font-black">Product Management</h1>
-      <form action="/api/admin/products" method="post" encType="multipart/form-data" className="mt-6 grid gap-4 rounded-lg border border-line bg-white p-5 md:grid-cols-3">
-        {["name", "slug", "category", "price", "compare_at_price", "cost_price", "supplier_name", "supplier_url", "shipping_estimate"].map((field) => (
+      <form action="/api/admin/products" method="post" encType="multipart/form-data" className="mt-6 grid gap-4 rounded-[1.5rem] border border-line bg-white p-5 md:grid-cols-3">
+        {["name", "slug", "category", "price", "compare_at_price", "cost_price", "supplier_name", "supplier_url", "shipping_estimate", "main_image_url", "lifestyle_image_url", "demo_video_url", "gif_url", "alt_text", "media_status"].map((field) => (
           <label key={field} className="grid gap-1"><span className="label capitalize">{field.replaceAll("_", " ")}</span><input className="field" name={field} required={["name", "slug", "category", "price"].includes(field)} /></label>
         ))}
         <label className="grid gap-1 md:col-span-3"><span className="label">Product image</span><input className="field" type="file" name="image" accept="image/*" /></label>

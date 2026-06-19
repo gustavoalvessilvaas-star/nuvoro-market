@@ -1,6 +1,6 @@
 # Analytics and Tracking
 
-Implemented events:
+Implemented internal events:
 
 - PageView
 - ViewContent
@@ -26,3 +26,14 @@ The app captures UTM parameters in localStorage:
 Add `NEXT_PUBLIC_GA4_MEASUREMENT_ID` for GA4 and `NEXT_PUBLIC_META_PIXEL_ID` for Meta Pixel. Add `META_CAPI_ACCESS_TOKEN` and `META_CAPI_PIXEL_ID` for server-side Meta Conversions API events.
 
 Newsletter submissions post to `/api/newsletter`, record a `Lead` event and upsert `newsletter_leads` when Supabase server credentials are configured.
+
+The browser helper maps internal event names to standard GA4 names before sending:
+
+- `PageView` -> `page_view`
+- `ViewContent` -> `view_item`
+- `ViewItemList` -> `view_item_list`
+- `AddToCart` -> `add_to_cart`
+- `ViewCart` -> `view_cart`
+- `InitiateCheckout` -> `begin_checkout`
+- `Lead` -> `generate_lead`
+- `ContactSubmit` -> `contact_submit`

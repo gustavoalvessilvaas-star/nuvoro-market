@@ -8,9 +8,9 @@
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(232, 244, 239, 0.9), transparent 34rem),
-    linear-gradient(180deg, #fbfcfa 0%, #f4f7f4 45%, #f7f8f6 100%);
-  color: #17211f;
+    linear-gradient(135deg, rgba(12, 18, 32, 0.04) 0%, rgba(56, 213, 201, 0.08) 38%, rgba(245, 247, 251, 0.96) 76%),
+    linear-gradient(180deg, #f8fafc 0%, #eef5f3 52%, #f7f8fb 100%);
+  color: #111827;
 }
 
 a, button {
@@ -22,15 +22,15 @@ a, button {
 }
 
 .btn-primary {
-  @apply inline-flex min-h-11 items-center justify-center rounded-full bg-coral px-5 py-3 text-sm font-bold text-white shadow-sm shadow-coral/20 hover:-translate-y-0.5 hover:bg-[#c74f3b] hover:shadow-lg hover:shadow-coral/20 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60;
+  @apply inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-r from-coral to-blue px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-coral/20 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60;
 }
 
 .btn-secondary {
-  @apply inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-white px-5 py-3 text-sm font-bold text-ink shadow-sm hover:-translate-y-0.5 hover:border-moss hover:text-moss hover:shadow-md disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60;
+  @apply inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-white/90 px-5 py-3 text-sm font-black text-ink shadow-sm hover:-translate-y-0.5 hover:border-aqua hover:text-moss hover:shadow-md disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60;
 }
 
 .field {
-  @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none placeholder:text-ink/35 focus:border-moss focus:ring-4 focus:ring-mint;
+  @apply w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none placeholder:text-ink/35 focus:border-aqua focus:ring-4 focus:ring-aqua/20;
 }
 
 .label {
@@ -38,11 +38,11 @@ a, button {
 }
 
 .card-surface {
-  @apply rounded-2xl border border-line/80 bg-white/90 shadow-sm shadow-ink/5 backdrop-blur;
+  @apply rounded-[1.5rem] border border-white/70 bg-white/90 shadow-soft backdrop-blur;
 }
 
 .soft-section {
-  @apply border-y border-line/70 bg-white/70;
+  @apply border-y border-white/70 bg-white/70;
 }
 
 .eyebrow {
@@ -54,9 +54,25 @@ a, button {
 }
 
 .nav-link {
-  @apply rounded-full px-3 py-2 text-sm font-bold text-ink/70 hover:bg-mint hover:text-moss;
+  @apply rounded-full px-3 py-2 text-sm font-bold text-ink/70 hover:bg-white hover:text-moss hover:shadow-sm;
 }
 
 .nav-link-active {
-  @apply bg-mint text-moss;
+  @apply bg-white text-moss shadow-sm;
+}
+
+.dark-section {
+  @apply bg-gradient-to-br from-night via-graphite to-moss text-white;
+}
+
+.premium-panel {
+  @apply rounded-[2rem] border border-white/15 bg-white/10 shadow-glow backdrop-blur;
+}
+
+.status-pill {
+  @apply inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-black;
+}
+
+.payment-chip {
+  @apply rounded-lg border border-line bg-cloud px-3 py-2 text-xs font-black text-ink/60;
 }

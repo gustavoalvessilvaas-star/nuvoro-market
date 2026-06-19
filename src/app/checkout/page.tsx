@@ -7,6 +7,7 @@ import Link from "next/link";
 import { CreditCard, LockKeyhole } from "lucide-react";
 import { useCart } from "@/components/store/cart-provider";
 import { TrustBadges } from "@/components/store/trust-badges";
+import { getPrimaryProductImage, getProductAlt } from "@/lib/product-media";
 import { formatCurrency } from "@/lib/utils";
 import { getStoredUtms, trackEvent } from "@/lib/tracking-client";
 
@@ -22,6 +23,7 @@ export default function CheckoutPage() {
     setLoading(true);
     setError("");
     trackEvent("InitiateCheckout", { value: subtotal });
+    trackEvent("AddShippingInfo", { value: subtotal });
     const payload = {
       customer: Object.fromEntries(formData.entries()),
       items: items.map((item) => ({
@@ -46,14 +48,16 @@ export default function CheckoutPage() {
       setLoading(false);
       return;
     }
+    trackEvent("AddPaymentInfo", { value: subtotal, provider: "stripe" });
     window.location.href = data.url;
   }
 
   if (!items.length) {
     return (
       <section className="container-page py-10">
-        <div className="card-surface p-10 text-center">
+        <div className="card-surface mx-auto max-w-2xl p-10 text-center">
           <h1 className="text-3xl font-black">Your cart is empty</h1>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-ink/60">Add a product before checkout so your order summary, shipping and Stripe payment session can be prepared correctly.</p>
           <Link href="/products" className="btn-primary mt-5">Shop Products</Link>
         </div>
       </section>
@@ -92,7 +96,7 @@ export default function CheckoutPage() {
         <div className="mt-4 grid gap-4">
           {items.map((item) => (
             <div key={item.cart_id} className="grid grid-cols-[64px_1fr_auto] gap-3 text-sm">
-              <Image src={item.product.images[0]} alt={item.product.name} width={80} height={80} className="aspect-square rounded-md object-cover" />
+              <Image src={getPrimaryProductImage(item.product)} alt={getProductAlt(item.product)} width={80} height={80} className="aspect-square rounded-md object-cover" />
               <div><p className="font-bold">{item.product.name}</p><p className="text-ink/60">{item.bundle_label ? `${item.bundle_label} - ` : ""}Qty {item.quantity}</p></div>
               <p className="font-bold">{formatCurrency(item.unit_price * item.quantity)}</p>
             </div>
@@ -102,6 +106,9 @@ export default function CheckoutPage() {
           <div className="flex justify-between"><span>Subtotal</span><span>{formatCurrency(subtotal)}</span></div>
           <div className="flex justify-between"><span>Shipping</span><span>Free</span></div>
           <div className="flex justify-between text-lg font-black"><span>Total</span><span>{formatCurrency(subtotal)}</span></div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2" aria-label="Payment methods">
+          {["Visa", "Mastercard", "Amex", "Stripe"].map((item) => <span key={item} className="payment-chip">{item}</span>)}
         </div>
         <div className="mt-5">
           <TrustBadges compact />

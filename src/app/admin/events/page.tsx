@@ -1,6 +1,10 @@
+import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminDashboard } from "@/lib/admin-data";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminEventsPage() {
+  await requireAdmin();
   const { events } = await getAdminDashboard();
   return (
     <section className="container-page py-10">

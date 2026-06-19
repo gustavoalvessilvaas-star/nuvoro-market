@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
 import { QuickAddButton } from "@/components/store/add-to-cart";
 import { NewsletterForm } from "@/components/store/newsletter-form";
@@ -17,43 +17,31 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="border-b border-line bg-white">
-        <div className="container-page grid gap-3 py-3 text-xs font-bold text-ink/70 sm:grid-cols-3">
-          {[
-            { label: "Secure Stripe checkout", Icon: ShieldCheck },
-            { label: "US launch support flow", Icon: CheckCircle2 },
-            { label: "Tracking when available", Icon: Truck }
-          ].map(({ label, Icon }) => (
-            <p key={label} className="flex items-center gap-2"><Icon className="h-4 w-4 text-moss" /> {label}</p>
-          ))}
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden">
+      <section className="dark-section relative overflow-hidden">
         <div className="container-page grid min-h-[76vh] items-center gap-10 py-12 lg:grid-cols-[1.05fr_.95fr]">
           <div>
-            <p className="eyebrow">Smart Everyday Essentials</p>
-            <h1 className="mt-4 max-w-3xl text-balance text-4xl font-black leading-tight text-ink sm:text-5xl lg:text-6xl">{siteConfig.slogan}</h1>
-            <p className="mt-5 max-w-2xl text-pretty text-lg leading-8 text-ink/70">{siteConfig.description}</p>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-aqua">Smart Everyday Essentials</p>
+            <h1 className="mt-4 max-w-3xl text-balance text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">{siteConfig.slogan}</h1>
+            <p className="mt-5 max-w-2xl text-pretty text-lg leading-8 text-white/70">{siteConfig.description}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/products" className="btn-primary gap-2">Shop Smart Finds <ArrowRight className="h-4 w-4" /></Link>
-              <Link href={`/products/${featured.slug}`} className="btn-secondary">View Featured Product</Link>
+              <Link href={`/products/${smartDeal.slug}`} className="btn-secondary border-white/20 bg-white/10 text-white hover:bg-white hover:text-ink">View Today&apos;s Deal</Link>
             </div>
-            <div className="mt-8 grid gap-3 text-sm font-semibold text-ink/70 sm:grid-cols-3">
+            <div className="mt-8 grid gap-3 text-sm font-semibold text-white/70 sm:grid-cols-3">
               {["No inflated claims", "Curated practical finds", "Secure Stripe checkout"].map((item) => (
-                <p key={item} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-moss" /> {item}</p>
+                <p key={item} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-aqua" /> {item}</p>
               ))}
             </div>
           </div>
-          <div className="rounded-[2rem] border border-line bg-white/80 p-4 shadow-soft">
-            <div className="mb-3 flex items-center gap-2 px-2 text-sm font-bold text-moss"><Sparkles className="h-4 w-4" /> Featured smart find</div>
+          <div className="premium-panel p-4">
+            <div className="mb-3 flex items-center gap-2 px-2 text-sm font-bold text-aqua"><Sparkles className="h-4 w-4" /> Featured smart find</div>
             <ProductCard product={featured} />
           </div>
         </div>
       </section>
 
       <section className="container-page pb-6">
-        <div className="grid gap-6 rounded-[2rem] border border-moss/25 bg-mint p-5 shadow-soft lg:grid-cols-[1fr_auto] lg:items-center lg:p-7">
+        <div className="grid gap-6 rounded-[2rem] border border-white/80 bg-white/90 p-5 shadow-soft lg:grid-cols-[1fr_auto] lg:items-center lg:p-7">
           <div>
             <p className="eyebrow">Today&apos;s Smart Deal</p>
             <h2 className="mt-2 text-2xl font-black text-ink">{smartDeal.name}</h2>
@@ -81,13 +69,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="soft-section py-14">
+      <section id="categories" className="soft-section py-14">
         <div className="container-page">
           <SectionHeading title="Shop by Category" />
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {categories.map((category) => (
-              <Link key={category} href={`/products?category=${encodeURIComponent(category)}`} className="card-surface p-5 font-black hover:-translate-y-1 hover:border-moss hover:shadow-soft">
+              <Link key={category} href={`/products?category=${encodeURIComponent(category)}`} className="card-surface min-h-32 p-5 font-black hover:-translate-y-1 hover:border-aqua hover:shadow-glow">
                 {category}
+                <span className="mt-4 block text-sm font-medium leading-6 text-ink/60">Curated practical finds for this routine.</span>
               </Link>
             ))}
           </div>
@@ -108,15 +97,34 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-mint py-14">
+      <section className="dark-section py-14">
         <div className="container-page grid gap-8 lg:grid-cols-2">
           <div>
-            <h2 className="text-3xl font-black text-ink">Curated to feel useful, not random.</h2>
-            <p className="mt-4 text-ink/75">Nuvoro Market focuses on practical finds with clear benefits, straightforward pricing and a clean support experience.</p>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-aqua">Why Nuvoro</p>
+            <h2 className="mt-2 text-3xl font-black text-white">Curated to feel useful, not random.</h2>
+            <p className="mt-4 text-white/70">Nuvoro Market focuses on practical finds with clear benefits, straightforward pricing and a clean support experience.</p>
           </div>
           <div className="grid gap-3">
             {["Products are selected around everyday use cases.", "Offers are written with practical benefits, not inflated claims.", "Manual fulfillment fields are built in for responsible supplier operations."].map((item) => (
-              <p key={item} className="rounded-2xl bg-white p-4 text-sm font-bold shadow-sm">{item}</p>
+              <p key={item} className="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm font-bold text-white/80">{item}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="container-page py-14">
+        <div className="grid gap-6 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+          <div>
+            <p className="eyebrow">Product Discovery</p>
+            <h2 className="mt-2 text-3xl font-black text-ink">Small upgrades that make everyday life easier.</h2>
+            <p className="mt-4 text-sm leading-7 text-ink/70">Every product starts with a clear use case: a cleaner home routine, calmer pet care, better car organization, easier travel or a more comfortable desk setup.</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {["Clear use case", "Practical price point", "Supplier review fields", "No fake social proof"].map((item) => (
+              <div key={item} className="card-surface p-5">
+                <CheckCircle2 className="h-5 w-5 text-moss" />
+                <p className="mt-3 font-black">{item}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -129,7 +137,9 @@ export default async function HomePage() {
             ["Where do you ship?", "Nuvoro Market is built for United States customers at launch."],
             ["How long does delivery take?", "Estimated delivery varies by product and supplier. Most seed products use a 7-14 business day placeholder estimate."],
             ["Can I track my order?", "Yes. Use the order tracking page with your order ID and email."],
-            ["How do returns work?", "Review the return and refund policies before purchasing. Legal review is recommended before launch."]
+            ["How do returns work?", "Review the return and refund policies before purchasing. Legal review is recommended before launch."],
+            ["Are payments secure?", "Card payments are processed through Stripe. Nuvoro Market does not store full card numbers."],
+            ["How are products selected?", "Products are selected around clear everyday use cases, margin checks, supplier review and honest benefit-focused copy."]
           ].map(([q, a]) => (
             <div key={q} className="card-surface p-5">
               <h3 className="font-bold">{q}</h3>

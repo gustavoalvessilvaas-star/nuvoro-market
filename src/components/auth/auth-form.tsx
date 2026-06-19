@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { getSupabaseBrowser, getSupabaseBrowserConfigError } from "@/lib/supabase/browser";
 
 type AuthMode = "login" | "register" | "forgot-password";
@@ -115,6 +116,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
 
   return (
     <form onSubmit={submit} className="card-surface mx-auto grid w-full max-w-md gap-5 p-6 shadow-soft sm:p-8">
+      <BrandLogo />
       <div>
         <p className="eyebrow">Nuvoro account</p>
         <h1 className="mt-2 text-3xl font-black text-ink">

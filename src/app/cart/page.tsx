@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/components/store/cart-provider";
 import { TrustBadges } from "@/components/store/trust-badges";
+import { getPrimaryProductImage, getProductAlt } from "@/lib/product-media";
 import { formatCurrency } from "@/lib/utils";
 import { trackEvent } from "@/lib/tracking-client";
 
@@ -25,7 +26,7 @@ export default function CartPage() {
           <div className="grid gap-4">
             {items.map((item) => (
               <article key={item.cart_id} className="card-surface grid grid-cols-[96px_1fr] gap-4 p-4">
-                <Image src={item.product.images[0]} alt={item.product.name} width={160} height={120} className="aspect-square rounded-2xl bg-mint object-cover" />
+                <Image src={getPrimaryProductImage(item.product)} alt={getProductAlt(item.product)} width={160} height={120} className="aspect-square rounded-2xl bg-mint object-cover" />
                 <div className="grid gap-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -56,6 +57,9 @@ export default function CartPage() {
             </div>
             <Link href="/checkout" className="btn-primary mt-5 w-full">Proceed to Checkout</Link>
             <Link href="/products" className="btn-secondary mt-3 w-full">Continue Shopping</Link>
+            <div className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Payment methods">
+              {["Visa", "Mastercard", "Amex", "Stripe"].map((item) => <span key={item} className="payment-chip">{item}</span>)}
+            </div>
             <p className="mt-4 text-center text-xs font-medium text-ink/50">Free shipping and secure Stripe payment flow.</p>
           </aside>
         </div>

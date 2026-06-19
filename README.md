@@ -58,10 +58,12 @@ See `.env.example` for the full list:
 - Read `docs/access-and-integrations.md` for the exact app/tool access observed in this Codex environment.
 - Read `docs/github-publish.md` to push the local commit to the GitHub repository once it is connected.
 - Read `docs/customer-auth.md` to configure Supabase Auth redirects and customer account behavior.
-- Read `docs/product-media.md`, `docs/manual-fulfillment.md`, `docs/admin-guide.md`, `docs/qa-checklist.md` and `docs/pre-launch-checklist.md` before launch.
+- Read `docs/brand-assets.md`, `docs/product-media.md`, `docs/manual-fulfillment.md`, `docs/admin-guide.md`, `docs/qa-checklist.md` and `docs/pre-launch-checklist.md` before launch.
 - Create a Supabase project, run schema and seed SQL, create an admin auth user, then insert that auth user ID into `admin_users`.
+- Run the latest idempotent migrations, including `supabase/migrations/2026-06-19_admin_ops_fields.sql`.
 - Create Stripe products or use dynamic Checkout line items as implemented, configure webhook `/api/webhooks/stripe`, and test with Stripe CLI.
-- Verify product suppliers, shipping times, returns, product compliance and placeholder images.
+- Upload the final logo files to `public/brand/`.
+- Verify product suppliers, shipping times, returns, product compliance and replace branded temporary product visuals.
 - Configure Resend domain authentication and sender email.
 - Add GA4 and Meta Pixel IDs only after accounts are ready.
 - Connect a Vercel project and set all production environment variables.
@@ -70,3 +72,5 @@ See `.env.example` for the full list:
 ## Notes
 
 External credentials are intentionally optional. Missing optional keys skip their integrations or return clear setup errors so the storefront does not crash.
+
+The storefront is visually stronger and functionally prepared, but it is not ready for paid ads until final product media, logo/favicon, supplier sample testing, Stripe webhook testing and legal policy review are complete.

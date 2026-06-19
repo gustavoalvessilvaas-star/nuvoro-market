@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, X } from "lucide-react";
 import type { CartItem, Product } from "@/lib/types";
+import { getPrimaryProductImage, getProductAlt } from "@/lib/product-media";
 import { formatCurrency } from "@/lib/utils";
 
 type CartContextValue = {
@@ -88,7 +89,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
               <div className="grid flex-1 gap-4 overflow-y-auto p-5">
                 {items.map((item) => (
                   <div key={item.cart_id} className="grid grid-cols-[72px_1fr] gap-3 rounded-2xl border border-line p-3">
-                    <Image src={item.product.images[0]} alt={item.product.name} width={90} height={90} className="aspect-square rounded-xl bg-mint object-cover" />
+                    <Image src={getPrimaryProductImage(item.product)} alt={getProductAlt(item.product)} width={90} height={90} className="aspect-square rounded-xl bg-mint object-cover" />
                     <div>
                       <p className="font-bold leading-tight text-ink">{item.product.name}</p>
                       {item.bundle_label ? <p className="mt-1 text-xs font-semibold text-moss">{item.bundle_label}</p> : null}

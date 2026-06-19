@@ -4,6 +4,33 @@ import type { EventName } from "@/lib/types";
 
 type TrackingMetadata = Record<string, unknown>;
 
+const ga4EventNames: Record<EventName, string> = {
+  PageView: "page_view",
+  ViewContent: "view_item",
+  ViewItemList: "view_item_list",
+  AddToCart: "add_to_cart",
+  ViewCart: "view_cart",
+  InitiateCheckout: "begin_checkout",
+  AddShippingInfo: "add_shipping_info",
+  AddPaymentInfo: "add_payment_info",
+  Purchase: "purchase",
+  Refund: "refund",
+  Lead: "generate_lead",
+  Search: "search",
+  ContactSubmit: "contact_submit"
+};
+
+const metaStandardEvents: Partial<Record<EventName, string>> = {
+  PageView: "PageView",
+  ViewContent: "ViewContent",
+  AddToCart: "AddToCart",
+  InitiateCheckout: "InitiateCheckout",
+  Purchase: "Purchase",
+  Lead: "Lead",
+  Search: "Search",
+  ContactSubmit: "Contact"
+};
+
 export function captureUtmParams() {
   if (typeof window === "undefined") return;
   const params = new URLSearchParams(window.location.search);
@@ -25,8 +52,11 @@ export function getStoredUtms() {
 export async function trackEvent(eventName: EventName, metadata: TrackingMetadata = {}) {
   if (typeof window === "undefined") return;
   const utm = getStoredUtms();
-  window.gtag?.("event", eventName, metadata);
-  window.fbq?.("track", eventName, metadata);
+  const ga4Name = ga4EventNames[eventName];
+  window.gtag?.("event", ga4Name, metadata);
+  const metaName = metaStandardEvents[eventName];
+  if (metaName) window.fbq?.("track", metaName, metadata);
+  else window.fbq?.("trackCustom", ga4Name, metadata);
   await fetch("/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

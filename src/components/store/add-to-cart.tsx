@@ -16,6 +16,7 @@ export function AddToCartActions({ product }: { product: Product }) {
     ? [...defaultBundleOptions]
     : [{ id: "single", label: "1x", quantity: 1, totalPrice: product.price }];
   const [selectedId, setSelectedId] = useState(bundleOptions[0].id);
+  const [notice, setNotice] = useState("");
   const selected = bundleOptions.find((bundle) => bundle.id === selectedId) || bundleOptions[0];
   const linePrice = selected.totalPrice;
 
@@ -26,6 +27,8 @@ export function AddToCartActions({ product }: { product: Product }) {
       unitPrice: linePrice,
       openDrawer
     });
+    setNotice(openDrawer ? "Added to cart. Your mini-cart is ready." : "Added. Taking you to checkout.");
+    window.setTimeout(() => setNotice(""), 2600);
     trackEvent("AddToCart", { product_id: product.id, value: selected.totalPrice, bundle: selected.id, units: selected.quantity });
   }
 
@@ -52,21 +55,25 @@ export function AddToCartActions({ product }: { product: Product }) {
         <button className="btn-secondary gap-2" onClick={() => add(true)}><ShoppingCart className="h-4 w-4" /> Add to Cart</button>
         <button className="btn-primary gap-2" onClick={() => { add(false); trackEvent("InitiateCheckout", { product_id: product.id, value: selected.totalPrice }); router.push("/checkout"); }}><Zap className="h-4 w-4" /> Buy Now</button>
       </div>
+      {notice ? <p className="rounded-2xl border border-moss/20 bg-mint p-3 text-sm font-bold text-moss">{notice}</p> : null}
     </div>
   );
 }
 
 export function QuickAddButton({ product }: { product: Product }) {
   const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
 
   function quickAdd() {
     addItem(product, 1, { bundleId: "single", bundleLabel: "1x", unitPrice: product.price });
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1800);
     trackEvent("AddToCart", { product_id: product.id, value: product.price, source: "quick_add" });
   }
 
   return (
     <button className="btn-primary w-full" onClick={quickAdd}>
-      Quick Add
+      {added ? "Added" : "Quick Add"}
     </button>
   );
 }
@@ -78,7 +85,7 @@ export function StickyBuyNow({ product }: { product: Product }) {
   function buyNow() {
     addItem(product, 1, {
       bundleId: "single",
-      bundleLabel: "1x",
+      bundleLabel: product.slug === "pawtrim-led-grinder" ? "1x PawTrim LED Grinder" : "1x",
       unitPrice: product.price,
       openDrawer: false
     });

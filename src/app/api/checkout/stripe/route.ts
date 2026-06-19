@@ -66,22 +66,32 @@ export async function POST(request: Request) {
     })));
   }
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-    customer_email: parsed.data.customer_email,
-    line_items: items.map((item) => ({
-      quantity: item.quantity,
-      price_data: {
-        currency: "usd",
-        unit_amount: Math.round(Number(item.unit_price || item.product.price) * 100),
-        product_data: { name: item.bundle_label ? `${item.product.name} (${item.bundle_label})` : item.product.name, description: item.product.description }
-      }
-    })),
-    shipping_address_collection: { allowed_countries: ["US"] },
-    metadata: { order_id: orderId, customer_email: parsed.data.customer_email, utm: JSON.stringify(body.utm || {}) },
-    success_url: siteUrl(`/thank-you?order=${orderId}&email=${encodeURIComponent(parsed.data.customer_email)}`),
-    cancel_url: siteUrl("/checkout")
-  });
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      customer_email: parsed.data.customer_email,
+      line_items: items.map((item) => ({
+        quantity: item.quantity,
+        price_data: {
+          currency: "usd",
+          unit_amount: Math.round(Number(item.unit_price || item.product.price) * 100),
+          product_data: { name: item.bundle_label ? `${item.product.name} (${item.bundle_label})` : item.product.name, description: item.product.description }
+        }
+      })),
+      shipping_address_collection: { allowed_countries: ["US"] },
+      metadata: {
+        order_id: orderId,
+        customer_email: parsed.data.customer_email,
+        internal_cart_ids: items.map((item) => item.cart_id).filter(Boolean).join(","),
+        utm: JSON.stringify(body.utm || {})
+      },
+      success_url: siteUrl(`/thank-you?order=${orderId}&email=${encodeURIComponent(parsed.data.customer_email)}`),
+      cancel_url: siteUrl("/checkout")
+    });
+  } catch {
+    return NextResponse.json({ error: "Stripe checkout could not be started. Check Stripe keys and try again." }, { status: 502 });
+  }
 
   if (supabase) await supabase.from("orders").update({ stripe_checkout_session_id: session.id }).eq("id", orderId);
   return NextResponse.json({ url: session.url });

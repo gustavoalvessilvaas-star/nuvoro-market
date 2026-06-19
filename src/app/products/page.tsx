@@ -1,7 +1,6 @@
 import { ProductCard } from "@/components/product-card";
 import { ProductListTracker } from "@/components/store/product-list-tracker";
 import { SearchForm } from "@/components/store/search-form";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { categories } from "@/lib/constants";
 import { getStoreProducts } from "@/lib/products";
 import type { Product } from "@/lib/types";
@@ -36,32 +35,40 @@ export default async function ProductsPage({ searchParams }: { searchParams: { c
   const products = sortProducts(filteredProducts, sort);
 
   return (
-    <section className="container-page py-10">
+    <>
       <ProductListTracker productIds={products.map((product) => product.id)} category={category} query={searchQuery} sort={sort} />
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <SectionHeading eyebrow="Nuvoro Market" title="Smart Everyday Finds">
-          <p>Browse practical products for home, car, pet care, travel and desk setups.</p>
-        </SectionHeading>
-        <SearchForm query={searchParams.q} category={category} sort={sort} />
-      </div>
-      <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
-        {["All", ...categories].map((item) => (
-          <a key={item} href={`/products?category=${encodeURIComponent(item)}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ""}${sort ? `&sort=${encodeURIComponent(sort)}` : ""}`} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${item === category ? "border-moss bg-moss text-white shadow-sm" : "border-line bg-white text-ink/70 hover:border-moss hover:text-moss"}`}>
-            {item}
-          </a>
-        ))}
-      </div>
-      {products.length ? (
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => <ProductCard key={product.id} product={product} />)}
+      <section className="dark-section">
+        <div className="container-page py-12">
+          <div className="max-w-3xl">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-aqua">Nuvoro Market</p>
+            <h1 className="mt-3 text-4xl font-black text-white">Smart Everyday Finds</h1>
+            <p className="mt-3 text-white/70">Browse practical products for home, car, pet care, travel and desk setups.</p>
+          </div>
         </div>
-      ) : (
-        <div className="card-surface mt-8 p-10 text-center">
-          <p className="text-lg font-black">No active products found.</p>
-          <p className="mt-2 text-sm text-ink/60">Try a different category or search term.</p>
-          <a href="/products" className="btn-primary mt-5">Reset Filters</a>
+      </section>
+      <section className="container-page -mt-8 py-10">
+        <div className="card-surface p-4 sm:p-5">
+          <SearchForm query={searchParams.q} category={category} sort={sort} />
+          <div className="mt-5 flex gap-2 overflow-x-auto pb-2">
+            {["All", ...categories].map((item) => (
+              <a key={item} href={`/products?category=${encodeURIComponent(item)}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ""}${sort ? `&sort=${encodeURIComponent(sort)}` : ""}`} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${item === category ? "border-night bg-night text-white shadow-sm" : "border-line bg-white text-ink/70 hover:border-aqua hover:text-moss"}`}>
+                {item}
+              </a>
+            ))}
+          </div>
         </div>
-      )}
-    </section>
+        {products.length ? (
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((product) => <ProductCard key={product.id} product={product} />)}
+          </div>
+        ) : (
+          <div className="card-surface mt-8 p-10 text-center">
+            <p className="text-lg font-black">No active products found.</p>
+            <p className="mt-2 text-sm text-ink/60">Try a different category or search term.</p>
+            <a href="/products" className="btn-primary mt-5">Reset Filters</a>
+          </div>
+        )}
+      </section>
+    </>
   );
 }

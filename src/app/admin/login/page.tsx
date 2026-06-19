@@ -2,6 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { BrandLogo } from "@/components/brand-logo";
 import { getSupabaseBrowser, getSupabaseBrowserConfigError } from "@/lib/supabase/browser";
 
 export default function AdminLoginPage() {
@@ -24,6 +25,7 @@ export default function AdminLoginPage() {
   return (
     <section className="container-page py-12">
       <form onSubmit={login} className="card-surface mx-auto max-w-md p-6">
+        <BrandLogo />
         <p className="eyebrow">Admin only</p>
         <h1 className="mt-2 text-3xl font-black">Admin Login</h1>
         <label className="mt-5 grid gap-1"><span className="label">Email</span><input className="field" type="email" name="email" required /></label>

@@ -2,6 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { Mail, PackageSearch, ShieldCheck } from "lucide-react";
 import { siteConfig } from "@/lib/constants";
 
 export default function ContactPage() {
@@ -30,7 +31,7 @@ export default function ContactPage() {
   }
 
   return (
-    <section className="container-page grid gap-8 py-10 lg:grid-cols-[1fr_380px]">
+    <section className="container-page grid gap-8 py-10 lg:grid-cols-[1fr_420px]">
       <form onSubmit={submit} className="card-surface p-5 sm:p-7">
         <p className="eyebrow">Support</p>
         <h1 className="mt-2 text-3xl font-black">Contact Support</h1>
@@ -50,13 +51,21 @@ export default function ContactPage() {
         {message ? <p className="mt-4 text-sm font-medium">{message}</p> : null}
         {error ? <p className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
       </form>
-      <aside className="card-surface h-fit p-5">
-        <h2 className="text-xl font-black">Support</h2>
-        <p className="mt-3 text-sm text-ink/70">{siteConfig.supportEmail}</p>
-        <div className="mt-5 grid gap-2 text-sm">
-          <a href="/order-tracking" className="font-semibold text-moss">Track an order</a>
-          <a href="/policies/shipping-policy" className="font-semibold text-moss">Shipping policy</a>
-          <a href="/policies/refund-policy" className="font-semibold text-moss">Refund policy</a>
+      <aside className="dark-section h-fit rounded-[1.5rem] p-6 shadow-soft">
+        <h2 className="text-xl font-black">Support Center</h2>
+        <p className="mt-3 text-sm text-white/70">{siteConfig.supportEmail}</p>
+        <div className="mt-6 grid gap-3">
+          {[
+            { title: "Order tracking", copy: "Find fulfillment status with order ID and email.", Icon: PackageSearch, href: "/order-tracking" },
+            { title: "Policy help", copy: "Review shipping, returns and refund terms.", Icon: ShieldCheck, href: "/policies/shipping-policy" },
+            { title: "Email support", copy: "Use the form for product or order questions.", Icon: Mail, href: "#" }
+          ].map(({ title, copy, Icon, href }) => (
+            <a key={title} href={href} className="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm hover:bg-white/15">
+              <Icon className="h-5 w-5 text-aqua" />
+              <span className="mt-3 block font-black text-white">{title}</span>
+              <span className="mt-1 block text-white/70">{copy}</span>
+            </a>
+          ))}
         </div>
       </aside>
     </section>

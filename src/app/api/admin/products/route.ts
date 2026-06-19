@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
+import { getAdminSession } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
 
 export async function POST(request: Request) {
+  const adminSession = await getAdminSession();
+  if (!adminSession.ok) return NextResponse.redirect(new URL("/admin/login", request.url));
   const form = await request.formData();
   const supabase = getSupabaseAdmin();
   if (!supabase) return NextResponse.redirect(new URL("/admin/products", request.url));
@@ -33,6 +36,12 @@ export async function POST(request: Request) {
     supplier_name: String(form.get("supplier_name") || ""),
     supplier_url: String(form.get("supplier_url") || ""),
     shipping_estimate: String(form.get("shipping_estimate") || "Estimated 7-14 business days"),
+    main_image_url: String(form.get("main_image_url") || "") || null,
+    lifestyle_image_url: String(form.get("lifestyle_image_url") || "") || null,
+    demo_video_url: String(form.get("demo_video_url") || "") || null,
+    gif_url: String(form.get("gif_url") || "") || null,
+    alt_text: String(form.get("alt_text") || "") || null,
+    media_status: String(form.get("media_status") || "placeholder"),
     images,
     benefits: [],
     details: {},

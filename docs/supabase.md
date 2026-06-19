@@ -23,3 +23,11 @@ insert into public.admin_users (user_id, role) values ('AUTH_USER_ID', 'admin');
 ## Newsletter Leads
 
 Run the latest schema or `supabase/migrations/2026-06-18_newsletter_leads.sql` to create `newsletter_leads`. The table is idempotent and can be run more than once without removing data.
+
+## Admin Operations Fields
+
+Run `supabase/migrations/2026-06-19_admin_ops_fields.sql` to add product SEO, bundle, related product, risk note and supplier cost/compliance fields. The migration uses `ADD COLUMN IF NOT EXISTS` and does not remove existing data.
+
+## Admin Access
+
+Admin pages require Supabase Auth plus a matching row in `admin_users`. Customer accounts are not admins unless their Auth user ID is inserted into this table.

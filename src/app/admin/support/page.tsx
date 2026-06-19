@@ -1,8 +1,11 @@
+import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminDashboard } from "@/lib/admin-data";
 
 export const metadata = { title: "Admin Support" };
+export const dynamic = "force-dynamic";
 
 export default async function AdminSupportPage() {
+  await requireAdmin();
   const { supportRequests } = await getAdminDashboard() as {
     supportRequests: Array<{ id: string; name: string; email: string; reason: string; message: string; order_id?: string | null; status: string; created_at?: string }>;
   };

@@ -1,16 +1,22 @@
 import Link from "next/link";
-import { BarChart3, Boxes, ListOrdered, MousePointerClick } from "lucide-react";
+import { BarChart3, Boxes, CheckCircle2, ListOrdered, MousePointerClick, RefreshCcw, Truck } from "lucide-react";
+import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminDashboard } from "@/lib/admin-data";
 import { formatCurrency } from "@/lib/utils";
 
 export const metadata = { title: "Admin" };
+export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
+  await requireAdmin();
   const { metrics } = await getAdminDashboard();
   const cards = [
     ["Total revenue", formatCurrency(metrics.revenue), BarChart3],
     ["Total orders", String(metrics.totalOrders), ListOrdered],
     ["Pending orders", String(metrics.pendingOrders), Boxes],
+    ["Shipped orders", String(metrics.shippedOrders), Truck],
+    ["Delivered orders", String(metrics.deliveredOrders), CheckCircle2],
+    ["Refunded orders", String(metrics.refundedOrders), RefreshCcw],
     ["Tracked events", String(metrics.eventCount), MousePointerClick]
   ];
 
@@ -24,9 +30,11 @@ export default async function AdminPage() {
           <Link href="/admin/customers" className="btn-secondary">Customers</Link>
           <Link href="/admin/events" className="btn-secondary">Events</Link>
           <Link href="/admin/support" className="btn-secondary">Support</Link>
+          <Link href="/admin/suppliers" className="btn-secondary">Suppliers</Link>
+          <Link href="/admin/validation" className="btn-secondary">Validation</Link>
         </div>
       </div>
-      <p className="mt-4 rounded-md bg-mint p-4 text-sm text-ink/75">Supabase Auth should protect this route in production with middleware and the admin_users table. Without Supabase keys, this dashboard uses seed/fallback data.</p>
+      <p className="mt-4 rounded-md bg-mint p-4 text-sm text-ink/75">Admin pages require Supabase Auth plus a matching row in `admin_users`.</p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map(([label, value, Icon]) => (
           <div key={String(label)} className="rounded-lg border border-line bg-white p-5">
