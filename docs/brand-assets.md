@@ -1,6 +1,6 @@
 # Brand Assets
 
-The storefront is prepared to use the final Nuvoro Market logo, but no approved logo file exists in this repository yet.
+The storefront now uses the provided Nuvoro logo as the primary brand asset.
 
 ## Upload Paths
 
@@ -10,10 +10,13 @@ Place approved assets in `public/brand/`:
 - `public/brand/nuvoro-logo.png`
 - `public/brand/nuvoro-icon.png`
 - `public/brand/nuvoro-og.png`
+- `public/nuvoro-logo.png` is the currently used public logo path.
+- `public/nuvoro-icon.png` is the currently used favicon/app icon path.
+- `public/nuvoro-og.png` is the currently used Open Graph image path.
 
 ## Current Fallback
 
-The app uses a temporary text-based Nuvoro wordmark in the header and footer if the logo files are missing. This keeps the site polished without inventing a new final logo.
+The app loads `public/nuvoro-logo.png` first, then falls back to `public/brand/nuvoro-logo.png`, SVG or a text wordmark if the image is missing.
 
 ## Before Launch
 

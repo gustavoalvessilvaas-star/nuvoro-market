@@ -17,11 +17,16 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
+  icons: {
+    icon: "/nuvoro-icon.png",
+    apple: "/nuvoro-icon.png"
+  },
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://nuvoro-market.vercel.app",
     siteName: siteConfig.name,
+    images: [{ url: "/nuvoro-og.png", width: 1200, height: 630, alt: `${siteConfig.name} logo` }],
     type: "website"
   }
 };

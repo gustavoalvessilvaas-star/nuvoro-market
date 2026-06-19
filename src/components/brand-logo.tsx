@@ -14,7 +14,7 @@ type BrandLogoProps = {
 
 export function BrandLogo({ href = "/", compact = false, inverted = false, onClick }: BrandLogoProps) {
   const [assetIndex, setAssetIndex] = useState(0);
-  const assets = ["/brand/nuvoro-logo.svg", "/brand/nuvoro-logo.png"];
+  const assets = ["/nuvoro-logo.png", "/brand/nuvoro-logo.png", "/brand/nuvoro-logo.svg"];
   const src = assets[assetIndex];
   const showAsset = assetIndex < assets.length;
 
@@ -24,9 +24,9 @@ export function BrandLogo({ href = "/", compact = false, inverted = false, onCli
         <Image
           src={src}
           alt={`${siteConfig.name} logo`}
-          width={220}
-          height={64}
-          className={compact ? "h-9 w-auto max-w-[150px] object-contain" : "h-11 w-auto max-w-[190px] object-contain"}
+          width={1236}
+          height={204}
+          className={`${compact ? "h-9 w-auto max-w-[150px]" : "h-11 w-auto max-w-[210px]"} object-contain ${inverted ? "rounded-2xl bg-white px-3 py-2" : ""}`}
           onError={() => setAssetIndex((current) => current + 1)}
         />
       ) : (
