@@ -30,3 +30,5 @@ values ('AUTH_USER_ID', 'admin');
 4. Watch event drop-off from product view to checkout to purchase.
 5. Do not add risky products without compliance review.
 6. Keep supplier sample status and validation scores updated before scaling ads.
+7. Use `/admin/orders` to update payment status, fulfillment status, tracking code, tracking URL, supplier order ID and internal notes.
+8. Use the resend buttons only after confirming the order email and tracking details are correct.

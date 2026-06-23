@@ -18,5 +18,7 @@
 - Newsletter form validates email and records lead when Supabase is configured.
 - Customer register/login/account works with Supabase Auth.
 - Admin login remains separate.
+- Admin orders can update payment status, fulfillment status, tracking URL, supplier order ID and internal notes.
+- Admin resend confirmation/tracking email buttons log safely if Resend is not configured.
 - Mobile nav opens and closes.
 - No public page exposes secret keys.

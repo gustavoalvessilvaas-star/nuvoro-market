@@ -28,6 +28,8 @@ Run the latest schema or `supabase/migrations/2026-06-18_newsletter_leads.sql` t
 
 Run `supabase/migrations/2026-06-19_admin_ops_fields.sql` to add product SEO, bundle, related product, risk note and supplier cost/compliance fields. The migration uses `ADD COLUMN IF NOT EXISTS` and does not remove existing data.
 
+Run `supabase/migrations/2026-06-23_pawtrim_safe_copy_refresh.sql` if your database was seeded before the safer PawTrim copy was added. It only updates PawTrim rows that still contain older unsafe wording.
+
 ## Admin Access
 
 Admin pages require Supabase Auth plus a matching row in `admin_users`. Customer accounts are not admins unless their Auth user ID is inserted into this table.

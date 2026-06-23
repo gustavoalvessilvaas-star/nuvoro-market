@@ -8,7 +8,7 @@ import { ProductCard } from "@/components/product-card";
 import { TrustBadges } from "@/components/store/trust-badges";
 import { getActiveProducts, getProductBySlug, getStoreProductBySlug, getStoreProducts } from "@/lib/products";
 import { getProductAlt, getProductImages } from "@/lib/product-media";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, siteUrl } from "@/lib/utils";
 
 export function generateStaticParams() {
   return getActiveProducts().map((product) => ({ slug: product.slug }));
@@ -37,6 +37,28 @@ export default async function ProductPage({ params }: { params: { slug: string }
   const productImages = getProductImages(product);
   const discount = product.compare_at_price ? Math.round((1 - product.price / product.compare_at_price) * 100) : null;
   const isPawTrim = product.slug === "pawtrim-led-grinder";
+  const absoluteImages = productImages.map((image) => image.startsWith("http") ? image : siteUrl(image));
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.short_description || product.description,
+    image: absoluteImages,
+    brand: {
+      "@type": "Brand",
+      name: "Nuvoro Market"
+    },
+    category: product.category,
+    sku: product.id,
+    offers: {
+      "@type": "Offer",
+      url: siteUrl(`/products/${product.slug}`),
+      priceCurrency: "USD",
+      price: product.price.toFixed(2),
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition"
+    }
+  };
   const problemBullets = isPawTrim
     ? ["Traditional clippers can feel stressful for pets and owners.", "Dark nails can make it harder to see where to trim.", "Pets may move suddenly, making nail care feel rushed.", "Professional grooming can be inconvenient for routine touch-ups."]
     : ["Small everyday frustrations can slow down routines.", "Cheap tools often feel random instead of useful.", "A clear use case makes a product easier to trust."];
@@ -47,6 +69,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
   return (
     <>
       <ProductViewTracker productId={product.id} value={product.price} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <section className="dark-section">
         <div className="container-page grid gap-10 py-10 lg:grid-cols-[1fr_.9fr]">
         <div className="grid gap-4">

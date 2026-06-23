@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   }
   const { data } = await supabase
     .from("orders")
-    .select("id, customer_email, fulfillment_status, tracking_code, updated_at, order_items(quantity, unit_price, product_snapshot)")
+    .select("id, customer_email, fulfillment_status, tracking_code, tracking_url, updated_at, order_items(quantity, unit_price, product_snapshot)")
     .eq("id", parsed.data.order_id)
     .eq("customer_email", parsed.data.customer_email.toLowerCase())
     .single();
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     order_id: data.id,
     status: data.fulfillment_status,
     tracking_code: data.tracking_code,
-    tracking_url: data.tracking_code ? `https://www.17track.net/en/track?nums=${encodeURIComponent(data.tracking_code)}` : "",
+    tracking_url: data.tracking_url || (data.tracking_code ? `https://www.17track.net/en/track?nums=${encodeURIComponent(data.tracking_code)}` : ""),
     updated_at: data.updated_at,
     items: data.order_items || []
   });

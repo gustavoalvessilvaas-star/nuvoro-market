@@ -20,7 +20,7 @@ async function send(to: string, subject: string, html: string) {
 export const emailTemplates = {
   orderConfirmation: (order: Partial<Order>) => `<h1>Order received</h1><p>Thanks for shopping with Nuvoro Market.</p><p>Order: ${order.id}</p>`,
   paymentApproved: (order: Partial<Order>) => `<h1>Payment approved</h1><p>Your payment for order ${order.id} was approved.</p>`,
-  shipped: (order: Partial<Order>) => `<h1>Your order shipped</h1><p>Tracking code: ${order.tracking_code || "Pending"}</p>`,
+  shipped: (order: Partial<Order>) => `<h1>Your order shipped</h1><p>Tracking code: ${order.tracking_code || "Pending"}</p>${order.tracking_url ? `<p><a href="${order.tracking_url}">Track your package</a></p>` : ""}`,
   delivered: (order: Partial<Order>) => `<h1>Delivered</h1><p>Your order ${order.id} is marked delivered.</p>`,
   supportNotification: (data: { name: string; email: string; message: string; reason?: string; order_id?: string }) => `<h1>New support request</h1><p>${data.name} (${data.email})</p><p>Reason: ${data.reason || "Not provided"}</p><p>Order: ${data.order_id || "Not provided"}</p><p>${data.message}</p>`
 };
@@ -28,6 +28,11 @@ export const emailTemplates = {
 export async function sendOrderConfirmation(order: Partial<Order>) {
   if (!order.customer_email) return;
   return send(order.customer_email, "Nuvoro Market order confirmation", emailTemplates.orderConfirmation(order));
+}
+
+export async function sendTrackingUpdate(order: Partial<Order>) {
+  if (!order.customer_email) return;
+  return send(order.customer_email, "Your Nuvoro Market tracking update", emailTemplates.shipped(order));
 }
 
 export async function sendSupportNotification(data: { name: string; email: string; message: string; reason?: string; order_id?: string }) {

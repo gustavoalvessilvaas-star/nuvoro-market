@@ -90,7 +90,9 @@ export type Order = {
   payment_status: PaymentStatus;
   fulfillment_status: FulfillmentStatus;
   tracking_code?: string | null;
+  tracking_url?: string | null;
   supplier_order_id?: string | null;
+  internal_notes?: string | null;
   stripe_checkout_session_id?: string | null;
   stripe_payment_intent_id?: string | null;
   created_at?: string;
