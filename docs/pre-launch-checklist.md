@@ -24,5 +24,11 @@
 22. Admin can add tracking code.
 23. Purchase event recorded.
 24. UTM captured on order.
+25. `supabase/migrations/2026-06-23_admin_dashboard_operations.sql` has been run.
+26. Admin can create a product draft and edit price, cost, supplier and media.
+27. Admin can create at least one supplier and link it to a product.
+28. Admin can add a product validation idea and convert it to a draft.
+29. Admin metrics show real empty states or real event data.
+30. No product is active with missing supplier, missing image or unreviewed margin.
 
 Nuvoro Market is not ready for paid ads until product media, supplier sample testing, Stripe webhook testing, logo/favicon upload and policy review are complete.

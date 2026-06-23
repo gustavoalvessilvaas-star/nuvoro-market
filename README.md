@@ -18,7 +18,7 @@ Nuvoro Market is a production-shaped Next.js MVP for a United States dropshippin
 2. Run `npm install`.
 3. Copy `.env.example` to `.env.local`.
 4. Add Supabase and Stripe test credentials.
-5. Run Supabase SQL from `supabase/schema.sql`, then `supabase/seed.sql`.
+5. Run Supabase SQL from `supabase/schema.sql`, then `supabase/seed.sql`, then `supabase/migrations/2026-06-23_admin_dashboard_operations.sql`.
 6. Start the app with `npm run dev`.
 7. Open `http://localhost:3000`.
 
@@ -58,9 +58,9 @@ See `.env.example` for the full list:
 - Read `docs/access-and-integrations.md` for the exact app/tool access observed in this Codex environment.
 - Read `docs/github-publish.md` to push the local commit to the GitHub repository once it is connected.
 - Read `docs/customer-auth.md` to configure Supabase Auth redirects and customer account behavior.
-- Read `docs/brand-assets.md`, `docs/product-media.md`, `docs/manual-fulfillment.md`, `docs/admin-guide.md`, `docs/qa-checklist.md` and `docs/pre-launch-checklist.md` before launch.
+- Read `docs/brand-assets.md`, `docs/product-media.md`, `docs/manual-fulfillment.md`, `docs/admin-guide.md`, `docs/supabase-admin-schema.md`, `docs/product-management.md`, `docs/supplier-management.md`, `docs/metrics-guide.md`, `docs/qa-checklist.md` and `docs/pre-launch-checklist.md` before launch.
 - Create a Supabase project, run schema and seed SQL, create an admin auth user, then insert that auth user ID into `admin_users`.
-- Run the latest idempotent migrations, including `supabase/migrations/2026-06-19_admin_ops_fields.sql`.
+- Run the latest idempotent migrations, including `supabase/migrations/2026-06-19_admin_ops_fields.sql` and `supabase/migrations/2026-06-23_admin_dashboard_operations.sql`.
 - Create Stripe products or use dynamic Checkout line items as implemented, configure webhook `/api/webhooks/stripe`, and test with Stripe CLI.
 - Upload the final logo files to `public/brand/`.
 - Verify product suppliers, shipping times, returns, product compliance and replace branded temporary product visuals.

@@ -20,6 +20,28 @@ Nuvoro Market is prepared for manual dropshipping fulfillment.
 - `shipped`
 - `in_transit`
 - `delivered`
+- `cancelled`
+- `returned`
+
+Payment statuses:
+
+- `pending`
+- `paid`
+- `failed`
+- `refunded`
+- `partially_refunded`
+
+## Admin Steps
+
+1. Open `/admin/orders`.
+2. Search by order ID, customer email, customer name or tracking code.
+3. Copy the shipping address or fulfillment block.
+4. Purchase the item from the selected supplier.
+5. Save the supplier order ID.
+6. Add tracking code and tracking URL.
+7. Mark the order as shipped.
+8. Send the tracking email only after verifying the tracking details.
+9. Customers can use `/order-tracking` with order ID and matching email.
 
 ## Supplier Checks
 

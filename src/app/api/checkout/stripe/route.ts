@@ -30,6 +30,7 @@ export async function POST(request: Request) {
   if (!stripe) return NextResponse.json({ error: "Stripe is not configured. Add STRIPE_SECRET_KEY to enable checkout." }, { status: 503 });
 
   const supabase = getSupabaseAdmin();
+  const utm = body.utm && typeof body.utm === "object" ? body.utm as Record<string, string> : {};
   const total = items.reduce((sum, item) => sum + Number(item.unit_price || item.product.price) * item.quantity, 0);
   let orderId = `dev_${Date.now()}`;
   if (supabase) {
@@ -53,7 +54,13 @@ export async function POST(request: Request) {
       },
       total_amount: total,
       payment_status: "pending",
-      fulfillment_status: "order_received"
+      fulfillment_status: "order_received",
+      source: utm.utm_source ? "utm" : "storefront",
+      utm_source: utm.utm_source || null,
+      utm_medium: utm.utm_medium || null,
+      utm_campaign: utm.utm_campaign || null,
+      utm_content: utm.utm_content || null,
+      utm_term: utm.utm_term || null
     }).select("id").single();
     if (error) return NextResponse.json({ error: "Order could not be created" }, { status: 500 });
     orderId = data.id;

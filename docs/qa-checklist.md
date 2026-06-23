@@ -20,5 +20,10 @@
 - Admin login remains separate.
 - Admin orders can update payment status, fulfillment status, tracking URL, supplier order ID and internal notes.
 - Admin resend confirmation/tracking email buttons log safely if Resend is not configured.
+- Admin products can create draft products, edit margin inputs and activate/deactivate products.
+- Admin suppliers can create suppliers, link products and show recommendation badges.
+- Admin metrics shows empty states without fake data and product rows after internal events exist.
+- Admin product validation can create ideas and convert them to product drafts.
+- Admin settings shows integration status without exposing secret values.
 - Mobile nav opens and closes.
 - No public page exposes secret keys.

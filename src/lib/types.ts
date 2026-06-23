@@ -1,6 +1,6 @@
-export type ProductStatus = "active" | "inactive";
-export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
-export type FulfillmentStatus = "order_received" | "processing" | "shipped" | "in_transit" | "delivered";
+export type ProductStatus = "active" | "inactive" | "draft";
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded" | "partially_refunded";
+export type FulfillmentStatus = "order_received" | "processing" | "shipped" | "in_transit" | "delivered" | "cancelled" | "returned";
 export type EventName =
   | "PageView"
   | "ViewContent"
@@ -35,6 +35,10 @@ export type Product = {
   price: number;
   compare_at_price: number | null;
   cost_price?: number | null;
+  shipping_cost?: number | null;
+  estimated_total_cost?: number | null;
+  estimated_margin_amount?: number | null;
+  estimated_margin_percent?: number | null;
   category: string;
   images: string[];
   main_image_url?: string | null;
@@ -47,6 +51,7 @@ export type Product = {
   seo_description?: string | null;
   bundle_options?: BundleOption[] | null;
   related_product_ids?: string[] | null;
+  related_products?: string[] | null;
   how_it_works?: string[] | null;
   risk_notes?: string | null;
   media_status?: "placeholder" | "supplier-approved" | "original-content";
@@ -56,6 +61,8 @@ export type Product = {
   status: ProductStatus;
   supplier_name?: string | null;
   supplier_url?: string | null;
+  supplier_platform?: string | null;
+  backup_supplier_url?: string | null;
   shipping_estimate: string;
   created_at?: string;
   updated_at?: string;
@@ -95,6 +102,12 @@ export type Order = {
   internal_notes?: string | null;
   stripe_checkout_session_id?: string | null;
   stripe_payment_intent_id?: string | null;
+  source?: string | null;
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
+  utm_content?: string | null;
+  utm_term?: string | null;
   created_at?: string;
   updated_at?: string;
 };

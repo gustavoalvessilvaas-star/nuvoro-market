@@ -1,39 +1,48 @@
+import { AdminPanel, EmptyState, StatusBadge } from "@/components/admin/admin-ui";
+import { AdminShell } from "@/components/admin/admin-shell";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminDashboard } from "@/lib/admin-data";
 
 export const metadata = { title: "Admin Support" };
 export const dynamic = "force-dynamic";
 
+type SupportRequest = {
+  id: string;
+  name: string;
+  email: string;
+  reason: string;
+  message: string;
+  order_id?: string | null;
+  status: string;
+  created_at?: string;
+};
+
 export default async function AdminSupportPage() {
   await requireAdmin();
-  const { supportRequests } = await getAdminDashboard() as {
-    supportRequests: Array<{ id: string; name: string; email: string; reason: string; message: string; order_id?: string | null; status: string; created_at?: string }>;
-  };
+  const { supportRequests } = await getAdminDashboard() as { supportRequests: SupportRequest[] };
 
   return (
-    <section className="container-page py-10">
-      <p className="eyebrow">Admin</p>
-      <h1 className="mt-2 text-4xl font-black">Support Requests</h1>
-      <div className="mt-6 grid gap-4">
+    <AdminShell title="Support" description="Customer contact requests submitted from the storefront contact page.">
+      <div className="grid gap-5">
         {supportRequests.length ? supportRequests.map((request) => (
-          <article key={request.id} className="card-surface p-5">
+          <AdminPanel key={request.id}>
             <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
               <div>
-                <h2 className="font-black">{request.reason}</h2>
-                <p className="mt-1 text-sm text-ink/60">{request.name} - {request.email}</p>
-                {request.order_id ? <p className="mt-1 text-sm text-ink/60">Order: {request.order_id}</p> : null}
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-xl font-black">{request.reason}</h2>
+                  <StatusBadge value={request.status} />
+                </div>
+                <p className="mt-2 text-sm text-white/55">{request.name} - {request.email}</p>
+                {request.order_id ? <p className="mt-1 text-sm text-white/55">Order: {request.order_id}</p> : null}
               </div>
-              <span className="rounded-full bg-mint px-3 py-1 text-xs font-black text-moss">{request.status}</span>
+              <p className="text-sm text-white/45">{request.created_at || "-"}</p>
             </div>
-            <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-ink/70">{request.message}</p>
-          </article>
+            <p className="mt-4 whitespace-pre-wrap rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm leading-6 text-white/70">{request.message}</p>
+          </AdminPanel>
         )) : (
-          <div className="card-surface p-8 text-center">
-            <p className="font-black">No support requests yet.</p>
-            <p className="mt-2 text-sm text-ink/60">Requests submitted through the contact page will appear here after `support_requests` exists in Supabase.</p>
-          </div>
+          <EmptyState title="No support requests yet">Requests submitted through the contact page will appear here after Supabase is configured.</EmptyState>
         )}
       </div>
-    </section>
+    </AdminShell>
   );
 }
